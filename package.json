@@ -1,7 +1,6 @@
 {
-  "name": "wworker",
+  "name": "template",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -54,5 +53,14 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "serve-static": "^1.13.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhao943018529/Template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zhao943018529/Template/issues"
+  },
+  "homepage": "https://github.com/zhao943018529/Template#readme",
+  "description": ""
 }

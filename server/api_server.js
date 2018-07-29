@@ -24,7 +24,6 @@ app.get('/v2/movie/in_theaters',function(request,response){
             data+=chunk;
         });
         res.on('end',()=>{
-            console.log(data);
             response.setHeader('Content-Type', 'application/json');
             response.end(data);
         });

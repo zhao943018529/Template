@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
-import fetchData from './fetch';
+import './worker';
 require('./index.scss');
 
 class App extends React.Component{
@@ -15,10 +15,25 @@ class App extends React.Component{
 	}
 
 	handleClick(event){
-		fetchData('/api/v2/movie/in_theaters',[()=>this.setState({status:1}),data=>this.setState({
-			status:2,
-			movies:data,
-		}),err=>this.setState({status:3,message:err.response})]);
+		this.setState({
+			status:1,
+		},()=>{
+			let w1 = new Worker('./worker.js');
+			w1.onmessage=function(e){
+				let data = e.data;
+				if(data.status===200){
+					this.setState({
+						status:2,
+						movies:data.data,
+					});
+				}else if(data.status===500){
+					this.setState({
+						status:3,
+						message:data.message,
+					})
+				}
+			}
+		});
 		event.preventDefault();
 	}
 

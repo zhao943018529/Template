@@ -10,6 +10,7 @@ const ENTRY_PATH = path.resolve(__dirname, 'client');
 const OUTPUT_PATH = path.resolve(__dirname, 'dist');
 
 module.exports = {
+  mode: 'development',
   devtool: 'source-map',
   entry: {
     main: path.resolve(ENTRY_PATH, 'index.js'),

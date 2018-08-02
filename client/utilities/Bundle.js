@@ -8,7 +8,7 @@ export default class Bundle extends React.Component{
             Component: null
         };
         props.load().then(component => this.setState({
-            Component: component
+            Component: component.default
         }));
     }
 
@@ -24,6 +24,8 @@ export default class Bundle extends React.Component{
 }
 
 
-export const WrapBundle=({FilePath,...rest})=>(
-    <Route {...rest} render={props=><Bundle load={()=>import(FilePath)} {...props}/>}/>
+const WrapBundle=({load ,...rest})=>(
+    <Route {...rest} render={props=><Bundle load={load} {...props}/>}/>
 );
+
+export {WrapBundle};

@@ -1,28 +1,20 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {Router} from 'react-router-dom';
+import {Provider} from 'react-redux';
 
-import Header from './components/Header';
-import Main from './components/Main';
-import history from './history'
+import AppContainer from './container/AppContainer';
+import {makeRootReducer} from './reducer/createReducer';
+import createStore from './store/createStore';
 
-class App extends React.Component{
+require('./styles/index.scss');
 
-    render(){
-        return (
-            <div className="container">
-                <Header/>
-                <Main/>
-            </div>
-        );
-    }
-}
+const store = createStore(makeRootReducer());
 
-
+store.asyncReducers={};
 
 render(
-    <Router history={history}>
-        <App/>
-    </Router>,
+    <Provider store={store}>
+        <AppContainer store={store}/>
+    </Provider>,
     document.getElementById('root')
 );

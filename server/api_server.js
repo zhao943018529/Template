@@ -4,6 +4,10 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const https = require("https");
 const app = express();
+
+
+const category = require('./Api/category');
+
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -16,6 +20,8 @@ app.use(session({
         maxAge: 60 * 1000 * 30
     },
 }));
+
+app.use('/category',category);
 
 app.get('/v2/movie/in_theaters',function(request,response){
     let data='';

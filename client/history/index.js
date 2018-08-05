@@ -11,8 +11,14 @@ function addQuery(history){
 
 addQuery(history);
 
-export const unlisten = history.listen(()=>{
+const unlisten = history.listen(()=>{
     addQuery(history);
 });
 
+const push = history.push;
+
 export default history;
+export {
+    push,
+    unlisten
+};

@@ -30,7 +30,13 @@ function fetchData() {
     let i = 0;
     callbacks.length === 3 && callbacks[i++]();
     return fetch(args[0], option).then(checkStatus).then(parseJSON)
-        .then(data => callbacks[i++](data)).catch(err => callbacks[i](err));
+        .then(data => {
+            if(data.status==200){
+                callbacks[i++](data.data);
+            }else{
+                throw new Error(data.message);
+            }
+        }).catch(err => callbacks[i](err));
 }
 
 export default fetchData;

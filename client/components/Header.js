@@ -45,7 +45,11 @@ export default class Header extends React.Component{
         }else if(status===3){
             content = (<div>{this.state.message}</div>);
         }else{
-            content = this.state.categories.map(category=>(<a href="javascript:void(0)" onClick={this.handleClick.bind(this,'/channel/'+category.name)}>{category.displayName}</a>));
+            content = this.state.categories.map(category=>(
+                <a key={category.id} href="javascript:void(0)" onClick={this.handleClick.bind(this,'/channel/'+category.name)}>
+                    {category.displayName}
+                </a>
+        ));
         }
         return (<div>
                 <Link to='/'>Home</Link>

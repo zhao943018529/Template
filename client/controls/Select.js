@@ -1,6 +1,6 @@
 import React from 'react';
-import Portal from '../../controls/Portal'
-
+import ReactDOM from 'react-dom';
+import Portal from './Portal';
 
 const placeHolder ="select a value";
 
@@ -16,32 +16,35 @@ export default class Select extends React.Component{
         this.getContainer =this._getContainer.bind(this);
     }
 
-    createPlaceholder(){
+    createSelection(){
         let value = this.props.value;
         let option = this.props.options.find(option=>option.value===value);
         let showText = option && option.displayName || placeHolder;
-        return (
-                <div className="selection-placeholder">
-                <span className="placeholder-text">
-                    {showText}
-                </span>
 
+        return (
+                <div className="select-selection">
+                    <span className="selection-text">
+                        {showText}
+                    </span>
+                    <i className={`fa fa-arrow-${this.state.IsExpanded?"up":"down"}`} aria-hidden="true"></i>
             </div>
         );
     }
 
     createOptions(){
         let opts = this.props.options.map((option,index)=>this.createOption(option,index));
-        return (<ul className="select-content">
-            {opts}
-        </ul>);
+        return (
+            <ul className="select-content">
+                {opts}
+            </ul>
+        );
     }
 
     createOption(option,index){
         let isActive=option.value===this.props.value;
 
         return (
-            <li data-index={index} onClick={this.selectOption} className={isActive?"select-option active":"select-option"}>
+            <li key={option.id} data-index={index} onClick={this.selectOption} className={isActive?"select-option active":"select-option"}>
                 <span className="option-text">{option.displayName}</span>
             </li>
         );
@@ -68,30 +71,24 @@ export default class Select extends React.Component{
         mountNode.style.top="50%";
         mountNode.style.left="50%";
         mountNode.style.background="#c8c8c8";
-
-        document.body.appendChild(mountNode);
+        let parentNode = this.props.getPopupContainer ? 
+        this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
+        parentNode.appendChild(mountNode);
         return mountNode;
-    }
-
-    showPanel(){
-        if(this.state.IsExpanded){
-            return (
-                <Portal getContainer={this.getContainer}>
-                    {this.createOptions()}
-                </Portal>
-
-            );
-        }else{
-            return null;
-        }
     }
 
     render(){
 
+        let panel =this.state.IsExpanded?(
+            <Portal getContainer={this.getContainer}>
+            {this.createOptions()}
+        </Portal>
+        ):null;
+
         return (
-            <div class="selection-wrap" onClick={this.toggleExpanded}>
+            <div class="select-wrap" onClick={this.toggleExpanded}>
                 {this.createPlaceholder()}
-                {this.showPanel()}
+                {panel}
             </div>
         );
     }

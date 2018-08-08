@@ -1,0 +1,102 @@
+.fontSize20{
+    font-size:20px;
+  }
+  
+  .select-wrap{
+    display:inline-block;
+    position:relative;
+    font-size:16px;
+    line-height:1.5;
+    font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  }
+  
+  .select-selection{
+      border: 1px solid #d9d9d9;
+      border-radius:4px;
+      cursor: pointer;
+      height:36px;
+      position:relative;
+    
+    & .select-arrow{
+      position:absolute;
+      right:8px;
+      top:50%;
+      
+      transform:translateY(-50%);
+    }
+  }
+  
+     .selection-renderer{
+        position:relative;
+        margin-left:11px;
+        margin-right:11px;
+        & .selection-text{
+        display:inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        padding-right: 20px;
+          line-height:34px;
+          vertical-align:middle;
+      }
+      
+      & .select-search{
+        display:none;
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        & .select-input{
+          box-sizing:border-box;
+          background: transparent;
+          width:100%;
+          height: 100%;
+          border:0;
+          padding:0;
+          line-height: 1;
+          &:focus{
+            outline:0;
+          }
+        }
+      }
+    }
+  
+  .select-focused .selection-text{
+    opacity:.8;
+  }
+  
+  .select-focused .select-search{
+    display:block;
+  }
+  
+  .select-dropdown{
+    font-size:16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+  }
+  
+  .select-dropdown-menu{
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  
+  .select-item{
+    cursor:pointer;
+    padding:6px 11px;
+    
+    &:hover{
+      background:#e6f7ff;
+    }
+    
+    &.selected{
+      background:#C8C8C8;
+    }
+    
+    &.disabled{
+      cursor:not-allowed;
+      color:#666666;
+    }
+  }

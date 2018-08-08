@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Portal from './Portal';
+import {getElementPos} from '../utilities/Html';
 
 const placeHolder ="select a value";
 
@@ -22,21 +23,26 @@ export default class Select extends React.Component{
         let showText = option && option.displayName || placeHolder;
 
         return (
-                <div className="select-selection">
-                    <span className="selection-text">
-                        {showText}
-                    </span>
-                    <i className={`fa fa-arrow-${this.state.IsExpanded?"up":"down"}`} aria-hidden="true"></i>
+            <div className="select-selection">
+            <div className="selection-renderer">
+                  <span className="selection-text">{showText}</span>
+              <div className="select-search">
+                <input type="search" className="select-input" />
+              </div>
             </div>
+            <i className={`fontSize20 fa fa-angle-${this.state.IsExpanded?"up":"down"} select-arrow`} aria-hidden="true"></i>
+          </div>
         );
     }
 
-    createOptions(){
+    createDropDown(){
         let opts = this.props.options.map((option,index)=>this.createOption(option,index));
         return (
-            <ul className="select-content">
-                {opts}
-            </ul>
+            <div style={{overflow:"auto"}}>
+                <ul className="select-dropdown-menu">
+                    {opts}
+                </ul>
+            </div>
         );
     }
 
@@ -44,8 +50,16 @@ export default class Select extends React.Component{
         let isActive=option.value===this.props.value;
 
         return (
-            <li key={option.id} data-index={index} onClick={this.selectOption} className={isActive?"select-option active":"select-option"}>
-                <span className="option-text">{option.displayName}</span>
+            <li key={option.id} data-index={index} onClick={this.selectOption} className={isActive?"select-item active":"select-item"}>
+               {option.displayName}
+            </li>
+        );
+    }
+
+    createNotFound(){
+        return (
+            <li className="select-item disabled">
+               Not Found
             </li>
         );
     }
@@ -67,10 +81,15 @@ export default class Select extends React.Component{
 
     _getContainer(){
         let mountNode = document.createElement('div');
+        let currentNode = ReactDOM.findDOMNode(this);
+        let xy = getElementPos(currentNode);
+        let width = currentNode.offsetWidth;
+        let height = currentNode.offsetHeight;
+        mountNode.className="select-dropdown";
         mountNode.style.position="absolute";
-        mountNode.style.top="50%";
-        mountNode.style.left="50%";
-        mountNode.style.background="#c8c8c8";
+        mountNode.style.top=xy.y+height+"px";
+        mountNode.style.left=xy.x+"px";
+        mountNode.style.width=width+"px";
         let parentNode = this.props.getPopupContainer ? 
         this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
         parentNode.appendChild(mountNode);
@@ -78,16 +97,16 @@ export default class Select extends React.Component{
     }
 
     render(){
-
-        let panel =this.state.IsExpanded?(
+        let IsExpanded = this.state.IsExpanded;
+        let panel =IsExpanded?(
             <Portal getContainer={this.getContainer}>
-            {this.createOptions()}
+            {this.createDropDown()}
         </Portal>
         ):null;
 
         return (
-            <div class="select-wrap" onClick={this.toggleExpanded}>
-                {this.createPlaceholder()}
+            <div className={IsExpanded?"select-wrap select-focused":"select-wrap"} onClick={this.toggleExpanded}>
+                {this.createSelection()}
                 {panel}
             </div>
         );

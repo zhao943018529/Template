@@ -1,4 +1,4 @@
-function getElementPos(elt){
+function getClientPosition(elt){
     let x=0;
     let y=0;
     for(let e =elt;e!=null;e=e.offsetParent){
@@ -11,15 +11,48 @@ function getElementPos(elt){
         x-=e.scrollLeft;
     }
 
-    x+=document.body.scrollLeft;
-    y+=document.body.scrollTop;
-
     return {
-        x:x,
-        y:y,
+        left:x,
+        top:y,
     };
 }
 
+function getScroll(w, top) {
+    let ret = w[`page${top ? 'Y' : 'X'}Offset`];
+    const method = `scroll${top ? 'Top' : 'Left'}`;
+    if (typeof ret !== 'number') {
+      const d = w.document;
+      // ie6,7,8 standard mode
+      ret = d.documentElement[method];
+      if (typeof ret !== 'number') {
+        // quirks mode
+        ret = d.body[method];
+      }
+    }
+    return ret;
+  }
+
+  function getScrollLeft(w) {
+    return getScroll(w);
+  }
+
+  function getScrollTop(w) {
+    return getScroll(w, true);
+  }
+
+function getOffset(el){
+    let pos = getClientPosition(el);
+    let doc = el.ownerDocument;
+    let w = doc.defaultView || doc.parentWindow;
+    pos.left+=getScrollLeft(w);
+    pos.top+=getScrollTop(w);
+
+    return pos;
+}
+
 export {
-    getElementPos,
+    getClientPosition,
+    getScrollLeft,
+    getScrollTop,
+    getOffset,
 };

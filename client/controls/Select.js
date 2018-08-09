@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Portal from './Portal';
+import Align from './Align';
 import {getElementPos} from '../utilities/Html';
 
 const placeHolder ="select a value";
@@ -15,6 +16,7 @@ export default class Select extends React.Component{
         this.selectOption=this._selectOption.bind(this);
         this.toggleExpanded =this._toggleExpanded.bind(this);
         this.getContainer =this._getContainer.bind(this);
+        this.selectionRef = React.createRef();
     }
 
     createSelection(){
@@ -23,7 +25,7 @@ export default class Select extends React.Component{
         let showText = option && option.displayName || placeHolder;
 
         return (
-            <div className="select-selection">
+            <div className="select-selection" ref={this.selectionRef}>
             <div className="selection-renderer">
                   <span className="selection-text">{showText}</span>
               <div className="select-search">
@@ -81,15 +83,10 @@ export default class Select extends React.Component{
 
     _getContainer(){
         let mountNode = document.createElement('div');
-        let currentNode = ReactDOM.findDOMNode(this);
-        let xy = getElementPos(currentNode);
-        let width = currentNode.offsetWidth;
-        let height = currentNode.offsetHeight;
         mountNode.className="select-dropdown";
         mountNode.style.position="absolute";
-        mountNode.style.top=xy.y+height+"px";
-        mountNode.style.left=xy.x+"px";
-        mountNode.style.width=width+"px";
+        mountNode.style.top="0";
+        mountNode.style.left="0";
         let parentNode = this.props.getPopupContainer ? 
         this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
         parentNode.appendChild(mountNode);
@@ -100,7 +97,9 @@ export default class Select extends React.Component{
         let IsExpanded = this.state.IsExpanded;
         let panel =IsExpanded?(
             <Portal getContainer={this.getContainer}>
-            {this.createDropDown()}
+                <Align refObj={this.selectionRef}>
+                    {this.createDropDown()}
+                </Align>
         </Portal>
         ):null;
 

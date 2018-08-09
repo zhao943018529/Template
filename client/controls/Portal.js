@@ -23,7 +23,16 @@ export default class Portal extends React.Component{
 
 
     render() {
-        return this.container ?
-            ReactDOM.createPortal(this.props.children, this.container) : null;
+        if(this.container){
+            let {layout}=this.props.children.props;
+            if(layout){
+                this.container.style.left=layout.left+"px";
+                this.container.style.top=layout.height+layout.top+"px";
+            }
+
+            return ReactDOM.createPortal(this.props.children, this.container);
+        }else{
+            return null;
+        }
     }
 }

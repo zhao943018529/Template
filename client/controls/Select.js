@@ -1,113 +1,235 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Portal from './Portal';
-import Align from './Align';
-import {getElementPos} from '../utilities/Html';
+import Trigger from './Trigger';
+import { getElementPos, KeyCode, getFocusedFromBlur } from '../utilities/Html';
 
-const placeHolder ="select a value";
+const PlaceHolder = "select a value";
 
-export default class Select extends React.Component{
+export default class Select extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            IsExpanded:false,
+        this.state = {
+            IsExpanded: false,
+            ActiveIndex: -1,
+            Search: '',
         };
-        this.selectOption=this._selectOption.bind(this);
-        this.toggleExpanded =this._toggleExpanded.bind(this);
-        this.getContainer =this._getContainer.bind(this);
         this.selectionRef = React.createRef();
+        this.searchRef = React.createRef();
+        this.onValueChange = this._onValueChange.bind(this);
+        // this.getContainer = this._getContainer.bind(this);
+        this.onSearchChange = this._onSearchChange.bind(this);
+        this.onInputKeyDown = this._onInputKeyDown.bind(this);
+        this.onBlurEvent = this._onBlurEvent.bind(this);
+        this.onKeyDown = this._onKeyDown.bind(this);
+        this.toggleClick = this._toggleClick.bind(this);
     }
 
-    createSelection(){
-        let value = this.props.value;
-        let option = this.props.options.find(option=>option.value===value);
-        let showText = option && option.displayName || placeHolder;
+    componentWillUnmount() {
+        this.clearDelayTimer();
+    }
+
+    clearDelayTimer() {
+        if (this.delayTimer) {
+            clearTimeout(this.delayTimer);
+            this.delayTimer = null;
+        }
+    }
+
+    _onInputKeyDown(e) {
+        switch (e.keyCode) {
+            case KeyCode.Left:
+            case KeyCode.Up:
+                this.goPrevious();
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case KeyCode.Down:
+            case KeyCode.Right:
+                this.goNext();
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case KeyCode.Enter:
+                if (this.state.IsExpanded && this.state.ActiveIndex > -1) {
+                    let options = this.filterOptions();
+                    let value = options[this.state.ActiveIndex].value;
+                    this.onValueChange(value);
+                } else {
+                    this.setState({
+                        IsExpanded: !this.state.IsExpanded,
+                        Search: '',
+                    });
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case KeyCode.Esc:
+                this.setOpenState(false, true);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            default:
+                break;
+        }
+    }
+
+    goPrevious() {
+        this.go();
+    }
+
+    goNext() {
+        this.go(true)
+    }
+
+    go(flag) {
+        let options = this.filterOptions();
+        if (options && options.length > 0) {
+            let index = this.state.ActiveIndex;
+            if (flag) {
+                index = index >= options.length - 1 ? 0 : index + 1;
+            } else {
+                index = index > 0 ? index - 1 : options.length - 1;
+            }
+            this.setState({
+                ActiveIndex: index,
+            });
+        }
+    }
+
+    _onBlurEvent(e) {
+        let focused = getFocusedFromBlur(e);
+        let container = this.selectionRef.current;
+        this.delayTimer = setTimeout(() => {
+            this.clearDelayTimer();
+            this.setOpenState(false, false);
+        }, 150);
+    }
+
+    filterOptions() {
+        if (this.state.Search) {
+            return this.props.Options.filter(option => option.value.indexOf(this.state.Search) !== -1);
+        } else {
+            return this.props.Options;
+        }
+    }
+
+    createSelection() {
+        let value = this.props.Value;
+        let option = this.props.Options.find(option => option.value === value);
+        let showText = option && option.displayName || this.props.PlaceHolder || PlaceHolder;
 
         return (
-            <div className="select-selection" ref={this.selectionRef}>
-            <div className="selection-renderer">
-                  <span className="selection-text">{showText}</span>
-              <div className="select-search">
-                <input type="search" className="select-input" />
-              </div>
+            <div className="select-selection" tabIndex={0} onKeyDown={this.onKeyDown} onClick={this.toggleClick} ref={this.selectionRef}>
+                <div className="selection-renderer">
+                    <span className="selection-text" style={{ visibility: this.state.Search ? "hidden" : "visible" }}>{showText}</span>
+                    <div className="select-search">
+                        <input value={this.state.Search} ref={this.searchRef} onKeyDown={this.onInputKeyDown} onChange={this.onSearchChange}
+                            onBlur={this.onBlurEvent} type="search" className="select-input" />
+                    </div>
+                </div>
+                <i className={`fontSize20 fa fa-angle-${this.state.IsExpanded ? "up" : "down"} select-arrow`} aria-hidden="true"></i>
             </div>
-            <i className={`fontSize20 fa fa-angle-${this.state.IsExpanded?"up":"down"} select-arrow`} aria-hidden="true"></i>
-          </div>
         );
     }
 
-    createDropDown(){
-        let opts = this.props.options.map((option,index)=>this.createOption(option,index));
-        return (
-            <div style={{overflow:"auto"}}>
-                <ul className="select-dropdown-menu">
-                    {opts}
-                </ul>
-            </div>
-        );
-    }
-
-    createOption(option,index){
-        let isActive=option.value===this.props.value;
-
-        return (
-            <li key={option.id} data-index={index} onClick={this.selectOption} className={isActive?"select-item active":"select-item"}>
-               {option.displayName}
-            </li>
-        );
-    }
-
-    createNotFound(){
-        return (
-            <li className="select-item disabled">
-               Not Found
-            </li>
-        );
-    }
-
-    _selectOption(event){
-       let target =  event.currentTarget;
-       let index = parseInt(target.dataset.index);
-       let option = this.props.options[index];
-       this.props.onValueChange(option.value);
-       event.stopPropagation();
-    }
-
-    _toggleExpanded(event){
+    _onSearchChange(event) {
+        let value = event.target.value;
         this.setState({
-            IsExpanded:!this.state.IsExpanded,
+            Search: value,
         });
         event.stopPropagation();
     }
 
-    _getContainer(){
-        let mountNode = document.createElement('div');
-        mountNode.className="select-dropdown";
-        mountNode.style.position="absolute";
-        mountNode.style.top="0";
-        mountNode.style.left="0";
-        let parentNode = this.props.getPopupContainer ? 
-        this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
-        parentNode.appendChild(mountNode);
-        return mountNode;
+    _onValueChange(value) {
+        if (value !== this.props.value) {
+            this.props.onValueChange(value);
+        }
+        this.setOpenState(false, true);
     }
 
-    render(){
+    _onKeyDown(e) {
+        if (this.state.IsExpanded) {
+            this._onInputKeyDown(e);
+        } else if (e.keyCode === KeyCode.Enter || e.keyCode === KeyCode.Down) {
+            this.setOpenState(true);
+            event.preventDefault();
+        }
+    }
+
+    setOpenState(open, needFocus) {
+        if (this.state.IsExpanded === open) {
+            return;
+        }
+        this.setState({
+            IsExpanded: open,
+            Search: '',
+            ActiveIndex: -1,
+        }, () => {
+            if (open) {
+                let input = this.searchRef.current;
+                input && input.focus();
+            } else if (needFocus) {
+                let selection = this.selectionRef.current;
+                selection && selection.focus();
+            }
+        });
+    }
+
+    _toggleClick(e) {
         let IsExpanded = this.state.IsExpanded;
-        let panel =IsExpanded?(
-            <Portal getContainer={this.getContainer}>
-                <Align refObj={this.selectionRef}>
-                    {this.createDropDown()}
-                </Align>
-        </Portal>
-        ):null;
+        this.setOpenState(!IsExpanded, IsExpanded);
+        e.stopPropagation();
+    }
+
+    // _getContainer() {
+    //     let mountNode = document.createElement('div');
+    //     mountNode.className = "select-dropdown";
+    //     mountNode.style.position = "absolute";
+    //     mountNode.style.top = "0";
+    //     mountNode.style.left = "0";
+    //     let parentNode = this.props.getPopupContainer ?
+    //         this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
+    //     parentNode.appendChild(mountNode);
+    //     return mountNode;
+    // }
+
+    render() {
+        let IsExpanded = this.state.IsExpanded;
+        let options = this.filterOptions();
+        // let panel = IsExpanded ? (
+        //     <Portal getContainer={this.getContainer}>
+        //         <Align refObj={this.selectionRef}>
+        //             <DropDownPane onValueChange={this.onValueChange} ActiveIndex={this.state.ActiveIndex} Options={options} Value={this.props.Value} />
+        //         </Align>
+        //     </Portal>
+        // ) : null;
 
         return (
-            <div className={IsExpanded?"select-wrap select-focused":"select-wrap"} onClick={this.toggleExpanded}>
+            <div style={this.props.Style} className={IsExpanded ? "select-wrap select-focused" : "select-wrap"}>
                 {this.createSelection()}
-                {panel}
+                <Trigger
+                    Visiable={IsExpanded}
+                    Options={options}
+                    ActiveIndex={this.state.ActiveIndex}
+                    Value={this.props.Value}
+                    onValueChange={this.onValueChange}
+                    AlignElement={this.selectionRef}
+                />
             </div>
         );
     }
 }
+
+
+// const options=[{
+//     id:1111,
+//     value:'google',
+//     displayName:'google',
+//     description:'asdfasfsdfsd',
+// },{
+//     id:2222,
+//     value:'baidu',
+//     displayName:'baidu',
+//     description:'asdfasfdasfdqerqdfs',
+// }];

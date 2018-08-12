@@ -40,4 +40,123 @@ $fa-font-path:"./icons/fonts";
 
 
 @import "./controls/select";
+@import "./controls/dialog";
 
+
+/** Header **/
+.maxWidth1000{
+    max-width:1000px;
+  }
+  
+  .u-flex0 {
+      -webkit-box-flex: 0;
+      -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+  }
+  
+  .u-flex1 {
+      -webkit-box-flex: 1;
+      -webkit-flex: 1 1 auto;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+  }
+  
+  .u-flexCenter {
+      display: -webkit-box!important;
+      display: -webkit-flex!important;
+      display: -ms-flexbox!important;
+      display: flex!important;
+      -webkit-box-align: center!important;
+      -webkit-align-items: center!important;
+      -ms-flex-align: center!important;
+      align-items: center!important;
+  }
+  
+  .u-marginAuto{
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  
+  .metabar{
+    position:relative;
+  
+  }
+  
+  .verticalAlign-middle{
+    vertical-align:middle;
+  }
+  
+  .noText-decoration:hover{
+    text-decoration:none;
+  }
+  
+  .marginRight16{
+    margin-right:16px;
+  }
+  
+  .metabar-header{
+      box-sizing:content-box;
+      margin:0 auto;
+      background:#C8C8C8;
+      height:65px;
+      padding:0 20px;
+      position:relative;
+  }
+  
+    .buttonSet{
+      position:relative;
+      & .search-button{
+        margin-bottom:0;
+        padding: .375rem 0;
+        cursor:pointer;
+  
+        & > input{
+          display:inline-block;
+          vertical-align:middle;
+          width: 0;
+          padding: 0;
+          border: none;
+          &:focus{
+            padding: .375rem .75rem;
+            margin-left:10px;
+            width:180px;
+          }
+        }
+        & > i{
+          vertical-align:middle;
+        }
+      }
+    }
+  
+   .metabar-logo{
+        position:absolute;
+        left:0;
+        right:0;
+        top:0;
+        bottom:0;
+        text-align:center;
+        & .metabar-img{
+            display:inline-block;
+            width:120px;
+            height:100%;
+        & img{
+            width:100%;
+            height:100%;
+       }
+     }
+  }
+  
+  .navigation-container{
+    font-size: 15px;
+    & .nav-item{
+      & .nav-link{
+      color:#333333;
+        &.active{
+          color:#060505;
+          font-weight:600;
+        }
+      }
+    }
+  }
+/****/

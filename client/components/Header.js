@@ -1,6 +1,7 @@
 import React from  'react';
 import {Link} from 'react-router-dom';
 import fetchData from '../utilities/fetch';
+import Dialog from '../controls/Dialog';
 
 export default class Header extends React.Component{
     constructor(props){
@@ -11,7 +12,10 @@ export default class Header extends React.Component{
             status:0,
             categories:[],
             message:'',
+
         };
+
+        this.closeDialog= this._closeDialog.bind(this);
     }
 
     componentDidMount(){
@@ -37,23 +41,91 @@ export default class Header extends React.Component{
         event.preventDefault();
     }
 
-    render(){
-        let status =this.state.status;
+    createNav(){
+        let status = this.state.status;
         let content;
-        if(status===0){
+        if (status === 0) {
             content = (<div>no data</div>);
-        }else if(status===3){
+        } else if (status === 3) {
             content = (<div>{this.state.message}</div>);
-        }else{
-            content = this.state.categories.map(category=>(
-                <a key={category.id} href="javascript:void(0)" onClick={this.handleClick.bind(this,'/channel/'+category.name)}>
-                    {category.displayName}
-                </a>
-        ));
+        } else {
+            content = this.state.categories.map(category => this.createLink(category));
         }
-        return (<div>
-                <Link to='/'>Home</Link>
-                {content}
-            </div>);
+
+        return (
+            <div className="navigation-container maxWidth1000 u-marginAuto">
+                <ul className="nav">
+                    {content}
+                </ul>
+            </div>
+        );
+    }
+
+    createLink(category) {
+        let path = `/${category.prefix}/${category.name}`;
+
+        return (
+            <li key={category.id} className="nav-item">
+                <a className="nav-link" onClick={this.handleClick.bind(this, path)} href="#">{category.displayName}</a>
+            </li>
+        );
+    }
+
+    createButtonSet(){
+        return (
+            <div className="buttonSet">
+            <label className="search-button verticalAlign-middle">
+                <i className="fa fa-search" aria-hidden="true"></i>
+                <input type="search" placeholder="Search Blog" className="form-control form-control-sm" />
+            </label>
+            <button type="button" onClick={()=>this.setState({status:4})} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
+            <button type="button" onClick={()=>this.setState({status:5})} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
+        </div>
+        );
+    }
+
+    _closeDialog(e){
+        this.setState({
+            status:1,
+        });
+
+        e.stopPropagation();
+    }
+
+    render(){
+        let status = this.state.status;
+        let title;
+        if(status===4){
+            title="Sign in";
+        }else if(status===5){
+            title="Get started"
+        }
+        let dialog;
+        if(title){
+            dialog=(
+                <Dialog ClassName="top" Title={title} Close={this.closeDialog}>
+                    <div>It's me!!!</div>
+                </Dialog>
+            );
+        }
+
+        return (
+            <div className="metabar">
+                <div className="metabar-header maxWidth1000 u-flexCenter">
+                    <div className="metabar-block u-flex1  d-xs-block">
+                    </div>
+                    <div className="metabar-logo">
+                        <a href="#" className="metabar-img">
+                            <img src="https://www.seoclerk.com/pics/579352-15CTfd1515601765.png" alt="" />
+                        </a>
+                    </div>
+                    <div className="metabar-block u-flex0">
+                        {this.createButtonSet()}
+                    </div>
+                </div>
+                {this.createNav()}
+                {dialog}
+            </div>
+        );
     }
 }

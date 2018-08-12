@@ -1,0 +1,60 @@
+.dialog-container{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background:rgba(20, 21, 23, 0.64);
+    text-align:center;
+    font-size:0;
+    color: #4c5161;
+    overflow: auto;
+    
+    &::after{
+      height:100%;
+      content:'';
+      display:inline-block;
+      vertical-align:middle;
+    }
+
+    &.top::after{
+        height: 25%;
+    }
+    
+    & .dialog{
+      font-size:16px;
+      background:#ffffff;
+      display:inline-block;
+      border-radius:4px;
+      vertical-align:middle;
+      text-align: left;
+      outline: 0;
+      position: relative;
+      min-width:400px;
+    }
+    
+    & .dialog-close{
+      position:absolute;
+      cursor:pointer;
+      top: 18px;
+      right: 17px;
+      width: 20px;
+      height: 20px;
+      font-weight:400;
+    }
+    
+    & .dialog-header{
+      padding:15px 50px 0 25px;
+    }
+    
+    & .dialog-body{
+      min-height: 60px;
+      padding: 10px 25px 20px;
+    }
+    
+    & .dialog-footer{
+      padding: 3px 25px 25px;
+      margin-top: -3px;
+      text-align: right;
+    }
+  }

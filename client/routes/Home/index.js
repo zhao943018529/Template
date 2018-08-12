@@ -3,18 +3,50 @@ import Select from '../../controls/Select';
 
 const options=[{
     id:1111,
-    value:'aaaaaa',
-    displayName:'aaaaa',
+    value:'google',
+    displayName:'google',
     description:'asdfasfsdfsd',
 },{
     id:2222,
-    value:'bbbbbb',
-    displayName:'cccccc',
+    value:'baidu',
+    displayName:'baidu',
     description:'asdfasfdasfdqerqdfs',
 },{
     id:3333,
-    value:'ccccc',
-    displayName:'dddddd',
+    value:'alibaba',
+    displayName:'alibaba',
+    description:'afddsafasdfas',
+},{
+    id:4444,
+    value:'facebook',
+    displayName:'facebook',
+    description:'afddsafasdfas',
+}
+,{
+    id:5555,
+    value:'tesla',
+    displayName:'tesla',
+    description:'afddsafasdfas',
+},{
+    id:6666,
+    value:'tenxun',
+    displayName:'tenxun',
+    description:'asdfasfdasfdqerqdfs',
+},{
+    id:7777,
+    value:'meituan',
+    displayName:'meituan',
+    description:'afddsafasdfas',
+},{
+    id:8888,
+    value:'weibo',
+    displayName:'weibo',
+    description:'afddsafasdfas',
+}
+,{
+    id:9999,
+    value:'twwiter',
+    displayName:'twwiter',
     description:'afddsafasdfas',
 }];
 
@@ -37,7 +69,7 @@ export default class Home extends React.Component{
     render(){
         return (<div>
             Home
-                <Select options={options}  onValueChange={this.onValueChange} value={this.state.value}/>
+                <Select Options={options} Style={{width:320}} onValueChange={this.onValueChange} Value={this.state.value}/>
             </div>);
     }
 }

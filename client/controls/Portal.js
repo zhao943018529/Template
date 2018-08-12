@@ -17,19 +17,16 @@ export default class Portal extends React.Component{
         this.forceUpdate();
     }
 
-    removeContainer(){
-        this.container && document.body.removeChild(this.container)
+    removeContainer() {
+        this.container && this.container.parentNode.removeChild(this.container)
     }
 
+    componentDidUpdate() {
+        this.props.setStyle && this.props.setStyle(this.container);
+    }
 
     render() {
         if(this.container){
-            let {layout}=this.props.children.props;
-            if(layout){
-                this.container.style.left=layout.left+"px";
-                this.container.style.top=layout.height+layout.top+"px";
-            }
-
             return ReactDOM.createPortal(this.props.children, this.container);
         }else{
             return null;

@@ -50,9 +50,28 @@ function getOffset(el){
     return pos;
 }
 
+function getFocusedFromBlur(e){
+    return  e.relatedTarget ||
+            e.explicitOriginalTarget ||
+            document.activeElement;
+}
+
+const KeyCode={
+    Esc:27,
+    Shift:17,
+    Left:37,
+    Right:39,
+    Up:38,
+    Down:40,
+    Alt:18,
+    Enter:13,
+};
+
 export {
     getClientPosition,
     getScrollLeft,
     getScrollTop,
     getOffset,
+    getFocusedFromBlur,
+    KeyCode,
 };

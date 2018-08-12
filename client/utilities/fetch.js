@@ -1,6 +1,5 @@
 import 'whatwg-fetch';
 
-
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response;
@@ -16,8 +15,8 @@ function parseJSON(response) {
 }
 
 function fetchData() {
-    if (arguments.length === 0) throw new Error("parameters not match");
     let args = [].slice.call(arguments, 0);
+    if (args.length < 2) throw new Error("parameters not match");
     let callbacks;
     let option;
     if (Array.isArray(args[1])) {

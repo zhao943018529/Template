@@ -16,6 +16,9 @@
       cursor: pointer;
       height:36px;
       position:relative;
+      &:focus{
+        border-color: #40a9ff;
+      }
     
     & .select-arrow{
       position:absolute;
@@ -73,6 +76,7 @@
   
   .select-dropdown{
     font-size:16px;
+    color: rgba(0, 0, 0, 0.65);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
   }
@@ -86,13 +90,19 @@
   .select-item{
     cursor:pointer;
     padding:6px 11px;
-    
-    &:hover{
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover,&.active{
       background:#e6f7ff;
     }
     
     &.selected{
-      background:#C8C8C8;
+      background-color: #fafafa;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.65);
     }
     
     &.disabled{

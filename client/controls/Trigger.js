@@ -7,11 +7,11 @@ import DropDownPane from './DropDownPane';
 export default class Trigger extends React.Component {
     constructor(props) {
         super(props);
-        this.getRootElement = this._getRootElement.bind(this);
+        this.getAlignElement = this._getAlignElement.bind(this);
         this.getContainer = this._getContainer.bind(this);
     }
 
-    _getRootElement() {
+    _getAlignElement() {
         return findDOMNode(this);
     }
 
@@ -28,13 +28,23 @@ export default class Trigger extends React.Component {
     }
 
     render() {
+        const newChildProps = { key: 'trigger' };
+        let child = React.Children.only(this.props.children);
+        let trigger = React.cloneElement(child,newChildProps);
+        let portal;
+        if(this.props.Visiable){
+            portal =(
+                <Portal key='portal' getContainer={this.getContainer}>
+                    <Align getAlignElement={this.getAlignElement}>
+                        {this.props.PopUp}
+                    </Align>
+                </Portal>
+            );
+        }
 
-        return this.props.Visiable ? (
-            <Portal getContainer={this.getContainer}>
-                <Align getRootElement={this.getRootElement} AlignElement={this.props.AlignElement}>
-                    <DropDownPane onValueChange={this.props.onValueChange} ActiveIndex={this.props.ActiveIndex} Options={this.props.Options} Value={this.props.Value} />
-                </Align>
-            </Portal>
-        ) : null;
+        return [
+            trigger,
+            portal,
+        ];
     }
 }

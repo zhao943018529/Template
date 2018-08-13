@@ -22,7 +22,7 @@ export default class Dialog extends React.Component{
 
         return (
             <Portal getContainer={this.getContainer}>
-                <div className="dialog">
+                <div className="dialog" style={this.props.Style}>
                     <a className="dialog-close fa fa-times" onClick={this.props.Close} aria-hidden="true"></a>
                     <div className="dialog-header">
                         {this.props.Title}

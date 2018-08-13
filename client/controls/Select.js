@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Trigger from './Trigger';
+import DropDownPane from './DropDownPane';
 import { getElementPos, KeyCode, getFocusedFromBlur } from '../utilities/Html';
 
 const PlaceHolder = "select a value";
@@ -194,29 +195,32 @@ export default class Select extends React.Component {
     //     return mountNode;
     // }
 
+    getDropComponent() {
+        let options = this.filterOptions();
+        return (
+            <DropDownPane
+                onValueChange={this.onValueChange}
+                ActiveIndex={this.state.ActiveIndex}
+                Options={options}
+                Value={this.props.Value} />
+        );
+    }
+
     render() {
         let IsExpanded = this.state.IsExpanded;
-        let options = this.filterOptions();
-        // let panel = IsExpanded ? (
-        //     <Portal getContainer={this.getContainer}>
-        //         <Align refObj={this.selectionRef}>
-        //             <DropDownPane onValueChange={this.onValueChange} ActiveIndex={this.state.ActiveIndex} Options={options} Value={this.props.Value} />
-        //         </Align>
-        //     </Portal>
-        // ) : null;
-
+        
         return (
-            <div style={this.props.Style} className={IsExpanded ? "select-wrap select-focused" : "select-wrap"}>
-                {this.createSelection()}
-                <Trigger
-                    Visiable={IsExpanded}
-                    Options={options}
-                    ActiveIndex={this.state.ActiveIndex}
-                    Value={this.props.Value}
-                    onValueChange={this.onValueChange}
-                    AlignElement={this.selectionRef}
-                />
-            </div>
+            <Trigger
+                Visiable={IsExpanded}
+                Value={this.props.Value}
+                onValueChange={this.onValueChange}
+                AlignElement={this.selectionRef}
+                PopUp={this.getDropComponent()}
+                >
+                <div style={this.props.Style} className={IsExpanded ? "select-wrap select-focused" : "select-wrap"}>
+                    {this.createSelection()}
+                </div>
+            </Trigger>
         );
     }
 }

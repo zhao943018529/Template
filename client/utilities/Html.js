@@ -56,6 +56,43 @@ function getFocusedFromBlur(e){
             document.activeElement;
 }
 
+function serializeArray(form) {
+    var field, l, s = [];
+    if (typeof form == 'object' && form.nodeName == "FORM") {
+        var len = form.elements.length;
+        for (var i=0; i<len; i++) {
+            field = form.elements[i];
+            if (field.name && !field.disabled && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+                if (field.type == 'select-multiple') {
+                    l = form.elements[i].options.length; 
+                    for (j=0; j<l; j++) {
+                        if(field.options[j].selected)
+                            s[s.length] = { name: field.name, value: field.options[j].value };
+                    }
+                } else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+                    s[s.length] = { name: field.name, value: field.value };
+                }
+            }
+        }
+    }
+    return s;
+}
+
+function serializeObject (a){
+   var o = {};
+   a.forEach(function(obj) {
+       if (o[obj.name]) {
+           if (!o[obj.name].push) {
+               o[obj.name] = [o[obj.name]];
+           }
+           o[obj.name].push(obj.value || '');
+       } else {
+           o[obj.name] = obj.value || '';
+       }
+   });
+   return o;
+}
+
 const KeyCode={
     Esc:27,
     Shift:17,
@@ -74,4 +111,6 @@ export {
     getOffset,
     getFocusedFromBlur,
     KeyCode,
+    serializeArray,
+    serializeObject,
 };

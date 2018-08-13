@@ -1,47 +1,48 @@
-import React from  'react';
-import {Link} from 'react-router-dom';
-import fetchData from '../utilities/fetch';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { fetchData } from '../utilities/fetch';
 import Dialog from '../controls/Dialog';
 
-export default class Header extends React.Component{
-    constructor(props){
+export default class Header extends React.Component {
+    constructor(props) {
         super(props);
-        this.fetchSuccess =this._fetchSuccess.bind(this);
+        this.fetchSuccess = this._fetchSuccess.bind(this);
         this.fetchFailed = this._fetchFailed.bind(this);
-        this.state={
-            status:0,
-            categories:[],
-            message:'',
+        this.state = {
+            status: 0,
+            categories: [],
+            message: '',
 
         };
 
-        this.closeDialog= this._closeDialog.bind(this);
+        this.closeDialog = this._closeDialog.bind(this);
+        this.submitEventCallback =this._submitEventCallback.bind(this);
     }
 
-    componentDidMount(){
-        fetchData('/api/category/getAll',[this.fetchSuccess,this.fetchFailed]);
+    componentDidMount() {
+        fetchData('/api/category/getAll', [this.fetchSuccess, this.fetchFailed]);
     }
 
-    _fetchSuccess(data){
+    _fetchSuccess(data) {
         this.setState({
-            status:1,
-            categories:data,
+            status: 1,
+            categories: data,
         });
     }
 
-    _fetchFailed(err){
+    _fetchFailed(err) {
         this.setState({
-            status:3,
-            message:err.message,
+            status: 3,
+            message: err.message,
         });
     }
 
-    handleClick(path,event){
+    handleClick(path, event) {
         this.props.history.push(path);
         event.preventDefault();
     }
 
-    createNav(){
+    createNav() {
         let status = this.state.status;
         let content;
         if (status === 0) {
@@ -71,40 +72,97 @@ export default class Header extends React.Component{
         );
     }
 
-    createButtonSet(){
+    createButtonSet() {
         return (
             <div className="buttonSet">
-            <label className="search-button verticalAlign-middle">
-                <i className="fa fa-search" aria-hidden="true"></i>
-                <input type="search" placeholder="Search Blog" className="form-control form-control-sm" />
-            </label>
-            <button type="button" onClick={()=>this.setState({status:4})} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
-            <button type="button" onClick={()=>this.setState({status:5})} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
-        </div>
+                <label className="search-button verticalAlign-middle">
+                    <i className="fa fa-search" aria-hidden="true"></i>
+                    <input type="search" placeholder="Search Blog" className="form-control form-control-sm" />
+                </label>
+                <button type="button" onClick={() => this.setState({ status: 4 })} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
+                <button type="button" onClick={() => this.setState({ status: 5 })} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
+            </div>
         );
     }
 
-    _closeDialog(e){
+    _closeDialog(e) {
         this.setState({
-            status:1,
+            status: 1,
         });
 
         e.stopPropagation();
     }
 
-    render(){
+    _submitEventCallback(event){
+        let fd = new FormData(event.target);
+        debugger;
+        return false;
+    }
+
+    createRegister() {
+        return (
+            <form onSubmit={this.submitEventCallback}>
+                <div className="form-group">
+                    <label htmlFor="nickname-r">Your Nickname</label>
+                    <input type="text" className="form-control" id="nickname-r" aria-describedby="nicknameHelp" placeholder="your name or your nickname" />
+                    <small id="nicknameHelp" className="form-text text-muted">.....</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="username-r">Username</label>
+                    <input type="text" className="form-control" id="username-r" aria-describedby="usernameHelp" placeholder="username" />
+                    <small id="usernameHelp" className="form-text text-muted">.....</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="phone-r">Your Phone</label>
+                    <input type="number" className="form-control" id="phone-r" aria-describedby="phoneHelp" placeholder="phone number" />
+                    <small id="phoneHelp" className="form-text text-muted">.....</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="email-r">Your Email</label>
+                    <input type="email" className="form-control" id="email-r" aria-describedby="emailHelp" placeholder="email" />
+                    <small id="emailHelp" className="form-text text-muted">.....</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password-r">Your Password</label>
+                    <input type="password" className="form-control" id="password-r" placeholder="Password" />
+                </div>
+                <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+        );
+    }
+
+    createSignIn() {
+        return (
+            <form>
+                <div className="form-group">
+                    <label htmlFor="username-r">Username</label>
+                    <input type="text" className="form-control" id="username-r" aria-describedby="usernameHelp" placeholder="username" />
+                    <small id="usernameHelp" className="form-text text-muted">.....</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password-r">Your Password</label>
+                    <input type="password" className="form-control" id="password-r" placeholder="Password" />
+                </div>
+            </form>
+        );
+    }
+
+    render() {
         let status = this.state.status;
         let title;
-        if(status===4){
-            title="Sign in";
-        }else if(status===5){
-            title="Get started"
+        let content;
+        if (status === 4) {
+            title = "Sign in";
+            content = this.createSignIn();
+        } else if (status === 5) {
+            title = "Get started";
+            content = this.createRegister();
         }
         let dialog;
-        if(title){
-            dialog=(
-                <Dialog ClassName="top" Title={title} Close={this.closeDialog}>
-                    <div>It's me!!!</div>
+        if (title) {
+            dialog = (
+                <Dialog ClassName="top" Style={{ width: 600 }} Title={title} Close={this.closeDialog}>
+                    {content}
                 </Dialog>
             );
         }

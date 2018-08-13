@@ -14,7 +14,7 @@ function parseJSON(response) {
     return response.json();
 }
 
-function fetchData() {
+export function fetchData() {
     let args = [].slice.call(arguments, 0);
     if (args.length < 2) throw new Error("parameters not match");
     let callbacks;
@@ -38,4 +38,34 @@ function fetchData() {
         }).catch(err => callbacks[i](err));
 }
 
-export default fetchData;
+export default function createRequest(){
+	if(arguments.length<2){
+		throw new Error('parameters size expect gt 2');
+	}
+	let url = arguments[0],actions;
+	let option = arguments[2] && (actions = arguments[2]) ? arguments[1] : (actions = arguments[1]) && {};
+
+
+	return dispatch =>{
+		if(actions.start){
+			dispatch(actions.start());
+		}
+
+		return fetch(url,option).then(checkStatus).then(parseJSON)
+		.then(function(data){
+			if(data.status>300&&data.status<400){
+				throw new Error(data.message);
+			}else{
+				dispatch(actions.success(data));
+				if(actions.aftersuc){
+					let tid = setTimeout(()=>{
+						clearTimeout(tid);
+						actions.aftersuc();
+					},1000);
+				}
+			}
+		}).catch(function(err){
+			dispatch(actions.failed(err));
+		});
+	}
+}

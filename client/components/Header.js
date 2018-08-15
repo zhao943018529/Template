@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { fetchData } from '../utilities/fetch';
 import Dialog from '../controls/Dialog';
+import {serializeArray,serializeObject} from '../utilities/Html';
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ export default class Header extends React.Component {
 
         this.closeDialog = this._closeDialog.bind(this);
         this.submitEventCallback =this._submitEventCallback.bind(this);
+        this.registerSuccess = this._registerSuccess.bind(this);
     }
 
     componentDidMount() {
@@ -93,10 +95,21 @@ export default class Header extends React.Component {
         e.stopPropagation();
     }
 
-    _submitEventCallback(event){
-        let fd = new FormData(event.target);
-        debugger;
-        return false;
+    _submitEventCallback(event) {
+        let data = serializeObject(serializeArray(event.target));
+        fetchData('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        }, [this.registerSuccess]);
+        event.preventDefault();
+    }
+
+
+    _registerSuccess(data){
+        console.log(data);
     }
 
     createRegister() {
@@ -104,32 +117,41 @@ export default class Header extends React.Component {
             <form onSubmit={this.submitEventCallback}>
                 <div className="form-group">
                     <label htmlFor="nickname-r">Your Nickname</label>
-                    <input type="text" className="form-control" id="nickname-r" aria-describedby="nicknameHelp" placeholder="your name or your nickname" />
-                    <small id="nicknameHelp" className="form-text text-muted">.....</small>
+                    <input type="text" name="nickname" className="form-control" id="nickname-r" placeholder="your name or your nickname" />
+                    <div class="invalid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="username-r">Username</label>
-                    <input type="text" className="form-control" id="username-r" aria-describedby="usernameHelp" placeholder="username" />
+                    <input type="text" name="username" onBlur={} className="form-control" id="username-r" aria-describedby="usernameHelp" placeholder="username" />
                     <small id="usernameHelp" className="form-text text-muted">.....</small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="phone-r">Your Phone</label>
-                    <input type="number" className="form-control" id="phone-r" aria-describedby="phoneHelp" placeholder="phone number" />
+                    <input type="number" name="phone" className="form-control" id="phone-r" aria-describedby="phoneHelp" placeholder="phone number" />
                     <small id="phoneHelp" className="form-text text-muted">.....</small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="email-r">Your Email</label>
-                    <input type="email" className="form-control" id="email-r" aria-describedby="emailHelp" placeholder="email" />
+                    <input type="email" name="email" className="form-control" id="email-r" aria-describedby="emailHelp" placeholder="email" />
                     <small id="emailHelp" className="form-text text-muted">.....</small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="password-r">Your Password</label>
-                    <input type="password" className="form-control" id="password-r" placeholder="Password" />
+                    <input type="password" name="password" className="form-control" id="password-r" placeholder="Password" />
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         );
     }
+
+    _checkUsernameIsUseable(event){
+       let username =  event.target.value;
+        fetchData('/api/valiUsername',[])
+    }
+
+
 
     createSignIn() {
         return (

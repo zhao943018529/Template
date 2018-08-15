@@ -6,11 +6,16 @@ const https = require("https");
 const app = express();
 
 
+const db = require('../db');
+const user=require('./Api/user');
+
 const category = require('./Api/category');
 
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+app.use(bodyParser.json());
 app.use(cookieParser("express-cookie"));
 app.use(session({
     secret: 'express-cookie',
@@ -22,6 +27,7 @@ app.use(session({
 }));
 
 app.use('/category',category);
+app.use(user);
 
 app.get('/v2/movie/in_theaters',function(request,response){
     let data='';

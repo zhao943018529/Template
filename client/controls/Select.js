@@ -183,17 +183,6 @@ export default class Select extends React.Component {
         e.stopPropagation();
     }
 
-    // _getContainer() {
-    //     let mountNode = document.createElement('div');
-    //     mountNode.className = "select-dropdown";
-    //     mountNode.style.position = "absolute";
-    //     mountNode.style.top = "0";
-    //     mountNode.style.left = "0";
-    //     let parentNode = this.props.getPopupContainer ?
-    //         this.props.getPopupContainer(ReactDOM.findDOMNode(this)) : document.body;
-    //     parentNode.appendChild(mountNode);
-    //     return mountNode;
-    // }
 
     getDropComponent() {
         let options = this.filterOptions();

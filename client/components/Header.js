@@ -128,6 +128,10 @@ export default class Header extends React.Component {
                     <small id="usernameHelp" className="form-text text-muted">.....</small>
                 </div>
                 <div className="form-group">
+                    <label htmlFor="password-r">Your Password</label>
+                    <input type="password" name="password" className="form-control" id="password-r" placeholder="Password" />
+                </div>
+                <div className="form-group">
                     <label htmlFor="phone-r">Your Phone</label>
                     <input type="number" name="phone" className="form-control" id="phone-r" aria-describedby="phoneHelp" placeholder="phone number" />
                     <small id="phoneHelp" className="form-text text-muted">.....</small>
@@ -136,10 +140,6 @@ export default class Header extends React.Component {
                     <label htmlFor="email-r">Your Email</label>
                     <input type="email" name="email" className="form-control" id="email-r" aria-describedby="emailHelp" placeholder="email" />
                     <small id="emailHelp" className="form-text text-muted">.....</small>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password-r">Your Password</label>
-                    <input type="password" name="password" className="form-control" id="password-r" placeholder="Password" />
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
@@ -155,17 +155,7 @@ export default class Header extends React.Component {
 
     createSignIn() {
         return (
-            <form>
-                <div className="form-group">
-                    <label htmlFor="username-r">Username</label>
-                    <input type="text" className="form-control" id="username-r" aria-describedby="usernameHelp" placeholder="username" />
-                    <small id="usernameHelp" className="form-text text-muted">.....</small>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password-r">Your Password</label>
-                    <input type="password" className="form-control" id="password-r" placeholder="Password" />
-                </div>
-            </form>
+
         );
     }
 

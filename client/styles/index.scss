@@ -160,3 +160,35 @@ $fa-font-path:"./icons/fonts";
     }
   }
 /****/
+
+
+/*lighttip start*/
+.lighttip-success{
+  background-color:#01cf97;
+}
+
+.lighttip-error{
+  background-color:#f4615c;
+}
+
+.lighttip{
+position:fixed;
+top:0;
+left:50%;
+min-width:400px;
+padding:15px;
+line-height:20px;
+color:#fff;
+text-align:center;
+z-index:10;
+font-size:14px;
+outline:0;
+& .lighttip-icon{
+  margin-right:7px;
+  vertical-align:middle;
+}
+& .lighttip-content{
+  vertical-align:middle;
+}
+}
+/**End***/

@@ -15,11 +15,13 @@ export default class LightTip extends React.Component{
         this.delayDestroyTip = this._delayDestroyTip.bind(this);
     }
 
-    componentDidMount(){
+    componentDidUpdate() {
         let child = findDOMNode(this);
         let parent = child.offsetParent;
-        parent.style.marginLeft=parent.offsetWidth/2+'px';
-        this.timeId=setTimeout(this.delayDestroyTip,1500);
+        if (parent && this.state.show) {
+            parent.style.marginLeft = parent.offsetWidth / 2 + 'px';
+            this.timeId = setTimeout(this.delayDestroyTip, 1500);
+        }
     }
 
     componentWillUnmount(){

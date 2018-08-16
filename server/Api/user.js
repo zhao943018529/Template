@@ -10,7 +10,8 @@ router.post('/register',function(req,res){
         if(err){
             console.log(err);
             result.status=500;
-            result.message=err.errors;
+            result.error=err.errors;
+            result.message='validate failed';
         }else{
             result.status=200;
             result.message='successful';

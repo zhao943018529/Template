@@ -13,15 +13,11 @@ export default class LightTip extends React.Component{
         this.timeId=null;
         this.getContainer = this._getContainer.bind(this);
         this.delayDestroyTip = this._delayDestroyTip.bind(this);
+        this.handlePortalUpdate= this._handlePortalUpdate.bind(this);
     }
 
-    componentDidUpdate() {
-        let child = findDOMNode(this);
-        let parent = child.offsetParent;
-        if (parent && this.state.show) {
-            parent.style.marginLeft = parent.offsetWidth / 2 + 'px';
-            this.timeId = setTimeout(this.delayDestroyTip, 1500);
-        }
+    componentDidMount() {
+        this.timeId = setTimeout(this.delayDestroyTip, 1500);
     }
 
     componentWillUnmount(){
@@ -32,6 +28,12 @@ export default class LightTip extends React.Component{
         if(this.timeId){
             clearTimeout(this.timeId);
         }
+    }
+
+    _handlePortalUpdate(){
+        let child = findDOMNode(this);
+        let parent = child.offsetParent;
+        parent.style.marginLeft = -parent.offsetWidth / 2 + 'px';
     }
 
     _delayDestroyTip(){
@@ -51,7 +53,7 @@ export default class LightTip extends React.Component{
     render(){
         if(this.state.show){
             return (
-                <Portal getContainer={this.getContainer}>
+                <Portal getContainer={this.getContainer} didUpdate={this.handlePortalUpdate}>
                     <i className="lighttip-icon fa fa-check" aria-hidden="true"></i>
                     <span className="lighttip-content">{this.props.message}</span>
                 </Portal>

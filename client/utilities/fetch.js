@@ -33,6 +33,7 @@ export function fetchData() {
             if (data.status == 200) {
                 callbacks[i++](data.data || data.message);
             } else {
+                i++;
                 throw new Error(data.error || data.message);
             }
         }).catch(err => callbacks[i](err));

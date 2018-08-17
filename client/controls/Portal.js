@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
-
 export default class Portal extends React.Component{
     componentDidMount(){
         this.createContainer();
@@ -21,8 +19,11 @@ export default class Portal extends React.Component{
         this.container && this.container.parentNode.removeChild(this.container)
     }
 
-    componentDidUpdate() {
-        this.props.setStyle && this.props.setStyle(this.container);
+    componentDidUpdate(prevProps) {
+        let {didUpdate} = this.props;
+        if(didUpdate){
+            didUpdate(prevProps);
+        }
     }
 
     render() {

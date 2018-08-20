@@ -1,5 +1,5 @@
 
-//0 not login 1logining 2login 3 err
+//0 not login 1logining 2login 3no login 4 err
 const initialState = {
     status: 0,
     user: null,
@@ -24,13 +24,13 @@ export default function reducer(state = initialState, action) {
         case FETCH_USER_SUCCESS:
             let payload = action.payload;
             return {
-                status: payload.status === 200 ? 2 : 0,
+                status: payload.status === 200 ? 2 : 3,
                 user: payload.data,
                 message: '',
             };
         case FETCH_USER_ERROR:
             return {
-                status: 3,
+                status: 4,
                 user: null,
                 message: action.error,
             };

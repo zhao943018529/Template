@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { fetchData } from '../utilities/fetch';
 import Dialog from '../controls/Dialog';
 import RegisterAndLogin from './RegisterAndLogin';
 
-class Header extends React.Component {
+export default class Header extends React.Component {
     constructor(props) {
         super(props);
         this.fetchSuccess = this._fetchSuccess.bind(this);
@@ -14,7 +13,6 @@ class Header extends React.Component {
             status: 0,
             categories: [],
             message: '',
-
         };
 
         this.closeDialog = this._closeDialog.bind(this);
@@ -153,10 +151,3 @@ class Header extends React.Component {
         );
     }
 }
-
-const mapStateToProps = state => ({
-    user: state.user
-});
-
-
-export default connect(mapStateToProps)(Header);

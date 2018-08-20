@@ -1,9 +1,3 @@
-import React from 'react';
+import TagContainer from './container/TagContainer';
 
-export default class Tag extends React.Component{
-    render(){
-        return (
-            <div>Tag</div>
-        );
-    }
-}
+export default TagContainer;

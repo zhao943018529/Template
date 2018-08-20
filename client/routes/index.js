@@ -49,13 +49,12 @@ const createRoutes = store => ([
         path: '/u/:uname_uid',
         key: 'user',
         render: props => {
-            let state = store.getState();
-            if (state.user.user) {
-                return <Bundle load={() => import('./User/components/UserView')} {...props} user={state.user.user} />;
+            let user = store.getState().user;
+            if (user.status === 2) {
+                return <Bundle load={() => import('./User/components/UserView')} {...props} user={user.user} store={store} />;
             } else {
                 return <Redirect to='/login' />;
             }
-
         },
     },
     {

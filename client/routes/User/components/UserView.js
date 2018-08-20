@@ -1,8 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import routes from '../routes';
+import createRoutes from '../routes';
 
 export default class UserView extends React.Component {
+    constructor(props){
+        super(props);
+    }
 
     createUserInfo() {
 
@@ -25,18 +28,31 @@ export default class UserView extends React.Component {
                 <ul className="nav nav-list">
                     <div className="avatar">
                     </div>
-                    <li className="nav-item u-flexCenter">
+                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this,'/')}>
                         <i className="link-icon fa fa-pencil-square-o" aria-hidden="true"></i>
                         <a className="title right" href="#">
                             write article</a>
+                    </li>
+                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this,'/tag')}>
+                        <i className="link-icon fa fa-tag" aria-hidden="true"></i>
+                        <a className="title right" href="#">
+                            Tag</a>
                     </li>
                 </ul>
             </nav>
         );
     }
 
+    handleRouteClick(path, event) {
+        let { match, history } = this.props;
+        history.push(`${match.url}${path}`);
+        event.stopPropagation();
+    }
+
     createRoutes() {
-        const { match } = this.props;
+        const { match,store } = this.props;
+        let routes = createRoutes(store);
+
         return (
             <div>
                 {routes.map(route => {

@@ -37,6 +37,7 @@ export default function TagReducer(state = initialState, action) {
 }
 
 export {
+    initialState,
     fetch_tags_start,
     fetch_tags_success,
     fetch_tags_failed,

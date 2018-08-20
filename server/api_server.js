@@ -9,6 +9,7 @@ const app = express();
 const db = require('../db');
 const userMiddleware = require('./middlewares/UserMiddleware');
 const user=require('./Api/user');
+const tag = require('./Api/tag');
 
 const category = require('./Api/category');
 
@@ -30,6 +31,7 @@ app.use(userMiddleware);
 
 app.use('/category',category);
 app.use(user);
+app.use('/tag',tag);
 
 app.get('/v2/movie/in_theaters',function(request,response){
     let data='';

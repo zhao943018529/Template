@@ -41,7 +41,37 @@ $fa-font-path:"./icons/fonts";
 
 @import "./controls/select";
 @import "./controls/dialog";
+@import "./controls/tagcontrol";
 
+/**/
+body{
+  background:#f4f5f5;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #909090;
+
+  &:hover{
+    color:#007fff;
+    outline-width: 0;
+    text-decoration: none;
+  }
+}
+
+.link-icon{
+  line-height:1.2;
+}
+
+.nav-item {
+    position: relative;
+    cursor: pointer;
+}
+
+li {
+    list-style: none;
+}
+/**/
 
 /** Header **/
 .maxWidth1000{
@@ -149,6 +179,7 @@ $fa-font-path:"./icons/fonts";
   
   .navigation-container{
     font-size: 15px;
+    background:#ffffff;
     & .nav-item{
       & .nav-link{
       color:#333333;
@@ -192,3 +223,107 @@ outline:0;
 }
 }
 /**End***/
+
+/*user index css*/
+.main-container{
+  position:relative;
+}
+/*view login*/
+.view-login{
+  background:#ffffff;
+  padding:25px 12px;
+}
+/**/
+.view-user{
+  display:flex;
+  margin-bottom: 6rem;
+  line-height: 1.2;
+  margin-top: 1.767rem
+}
+
+.major-view{
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.minor-view{
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  margin-left: 1rem;
+  width:20rem;
+}
+
+  .user-action-nav{
+    font-size: 1.16rem;
+    background:#fff;
+    border:1px solid #f5f5f5;
+    margin-top:1rem;
+  }
+.nav-list{
+  display:flex;
+  align-items:center;
+  
+  & .nav-item {
+    padding:0 1.5rem;
+    color:#0371df;
+    & .title{
+      display:inline-block;
+      color:#0371df;
+      padding-bottom:4px;
+      
+      &.right{
+        margin-left:5px;
+      }
+      
+      &.left{
+        margin-right:5px;
+      }
+    }
+  } 
+}
+
+.avatar{
+  background:#EEEEEE url('/images/avatar.png') no-repeat center; 
+  background-size:cover; 
+  .nav-list &{
+    width:50px;
+    height:50px;
+  }
+  .user-info-block &{
+    margin-right:1.2rem;
+    width:7.5rem;
+    height:7.5rem;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+  }
+}
+
+.user-info-block{
+  background:#FFFFFF;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding:2.5rem;
+
+  & .user-info{
+    display:flex;
+  }
+
+  & .info-box{
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+  }
+
+  & .action-box{
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+/**/

@@ -11,12 +11,12 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        validate: {
-            validator: function (v) {
-                return /\w{8,16}/.test(v);
-            },
-            message: '{VALUE} is not a valid username',
-        }
+        // validate: {
+        //     validator: function (v) {
+        //         return /\w{8,16}/.test(v);
+        //     },
+        //     message: '{VALUE} is not a valid username',
+        // }
     },
     phone: {
         type: Number,
@@ -43,26 +43,35 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-UserSchema.virtual("id").get(function() {
-  return this._id;
+function validationForUsername(v) {
+    return /\w{8,16}/.test(v);
+}
+
+UserSchema.path('username').validate(validationForUsername, '{VALUE} is not a valid username', 'Invalid username');
+
+UserSchema.virtual("id").get(function () {
+    return this._id;
 });
 
 UserSchema.set("toJSON", { virtuals: true });
 
 UserSchema.statics = {
-	getUserByName: function(username, callback) {
-		return this.findOne({
-			username: username
-		}, callback);
-	},
-	getUserById: function(_id, cb) {
-		return this.findById(_id, cb);
+    getUserByUsernameAndPassword:function(username,password,callback){
+        return this.findOne({username:username,password:password}).select('-password').exec(callback);
     },
-    usernameIsExists:function(username,cb){
-        return this.findOne({username:username}).select('username',function(err,user){
-            cb(err,!!user);
+    getUserByName: function (username, callback) {
+        return this.findOne({
+            username: username
+        }, callback);
+    },
+    getUserById: function (_id, cb) {
+        return this.findById(_id, cb);
+    },
+    usernameIsExists: function (username, cb) {
+        return this.findOne({ username: username }).select('username').exec(function (err, user) {
+            cb(err, !!user);
         });
     }
 }
 
-module.exports=mongoose.model('User',UserSchema);
+module.exports = mongoose.model('User', UserSchema);

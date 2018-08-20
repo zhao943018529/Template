@@ -29,44 +29,28 @@ export function fetchData() {
     let i = 0;
     callbacks.length === 3 && callbacks[i++]();
     return fetch(args[0], option).then(checkStatus).then(parseJSON)
-        .then(data => {
-            if (data.status == 200) {
-                callbacks[i++](data.data || data.message);
-            } else {
-                i++;
-                throw new Error(data.error || data.message);
-            }
-        }).catch(err => callbacks[i](err));
+        .then(data => callbacks[i++](data))
+        .catch(err => callbacks[i](err));
 }
 
-export default function createRequest(){
-	if(arguments.length<2){
-		throw new Error('parameters size expect gt 2');
-	}
-	let url = arguments[0],actions;
-	let option = arguments[2] && (actions = arguments[2]) ? arguments[1] : (actions = arguments[1]) && {};
+export function createRequest() {
+    if (arguments.length < 2) {
+        throw new Error('parameters size expect gt 2');
+    }
+    let url = arguments[0], actions;
+    let option = arguments[2] && (actions = arguments[2]) ? arguments[1] : (actions = arguments[1]) && {};
 
-
-	return dispatch =>{
-		if(actions.start){
-			dispatch(actions.start());
-		}
-
-		return fetch(url,option).then(checkStatus).then(parseJSON)
-		.then(function(data){
-			if(data.status>300&&data.status<400){
-				throw new Error(data.message);
-			}else{
-				dispatch(actions.success(data));
-				if(actions.aftersuc){
-					let tid = setTimeout(()=>{
-						clearTimeout(tid);
-						actions.aftersuc();
-					},1000);
-				}
-			}
-		}).catch(function(err){
-			dispatch(actions.failed(err));
-		});
-	}
+    return dispatch => {
+        actions.start && dispatch(actions.start());
+        return fetch(url, option).then(checkStatus).then(parseJSON)
+            .then(data => {
+                if (data.status == 200) {
+                    dispatch(actions.success(data));
+                } else {
+                    throw new Error(data.message);
+                }
+            }).catch(function (err) {
+                dispatch(actions.failed(err));
+            });
+    }
 }

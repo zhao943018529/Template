@@ -7,6 +7,7 @@ const app = express();
 
 
 const db = require('../db');
+const userMiddleware = require('./middlewares/UserMiddleware');
 const user=require('./Api/user');
 
 const category = require('./Api/category');
@@ -25,6 +26,7 @@ app.use(session({
         maxAge: 60 * 1000 * 30
     },
 }));
+app.use(userMiddleware);
 
 app.use('/category',category);
 app.use(user);
@@ -41,6 +43,11 @@ app.get('/v2/movie/in_theaters',function(request,response){
         });
     });
     req.end();
+});
+
+app.use(function(err,req,res,next){
+    console.error(err.stack)
+    res.status(500).send('Something broke!');
 });
 
 app.listen(13893, err => {

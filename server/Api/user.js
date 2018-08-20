@@ -1,17 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
-const User = require('../../models/User');
+router.post('/login', function (req, res, next) {
+    let body = req.body;
+    console.log(body);
+    User.getUserByUsernameAndPassword(body.username, body.password, function (err, user) {
+        let result = {};
+        if (err) {
+            console.log(err);
+            next(err);
+        } else {
+            if (user) {
+                req.session.uid = user.id;
+                result.status = 200;
+                result.data = user;
+                result.message = "Login successfully";
+            } else {
+                result.status = 100;
+                result.message = "username or password incorrect";
+            }
+            res.json(result);
+        }
+    });
+});
 
-router.post('/register',function(req,res){
+router.post('/register',function(req,res,next){
     let user = new User(req.body);
     user.save(function(err){
         let result={};
         if(err){
-            console.log(err);
-            result.status=500;
-            result.error=err.errors;
-            result.message='validate failed';
+            if(err.errors){
+                console.log(err);
+                result.status=100;
+                result.error=err.errors;
+                result.message='validate failed';
+            }else{
+                next(err);
+            }
         }else{
             result.status=200;
             result.message='successful';
@@ -20,14 +47,13 @@ router.post('/register',function(req,res){
     });
 });
 
-router.get('/valiUsername',function(req,res){
-    let username = req.body.username;
+router.get('/valiUsername',function(req,res,next){
+    let username = req.query.username;
     if(username){
         User.usernameIsExists(username,function(err,isExists){
             let result ={};
             if(err){
-                result.status=500;
-                result.message='server error';
+                next(err);
             }else{
                 result.status=200;
                 result.data={used:isExists};
@@ -37,10 +63,23 @@ router.get('/valiUsername',function(req,res){
         });
     }else{
         res.json({
-            status:444,
+            status:401,
             message:'illegal access',
         });
     }
+});
+
+router.get('/getLoginUser',function(req,res){
+    let result={};
+    if(req.user){
+        result.status=200;
+        result.data=req.user;
+    }else{
+        result.status=404;
+        result.message="Not Login";
+    }
+
+    res.json(result);
 });
 
 module.exports=router;

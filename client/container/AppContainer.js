@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router,Switch,Route} from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createRoutes from '../routes';
 import history from '../history';
@@ -14,7 +14,7 @@ import {
 
 const FETCH_USER_URL = "/api/getLoginUser";
 
-class AppContainer extends React.Component{
+class AppContainer extends React.Component {
 
     componentDidMount() {
         history.listen(() => {
@@ -42,7 +42,12 @@ class AppContainer extends React.Component{
         let user = this.props.user;
         let content;
 
-        if (user.status !== 0 && user.status !== 4) {
+        if (user.status === 0 || user.status === 1) {
+            content = (
+                <Loading />
+            );
+        } else {
+
             let routes = createRoutes(this.props.store);
             content = (
                 <Switch>
@@ -50,10 +55,6 @@ class AppContainer extends React.Component{
                         return <Route {...route} />
                     })}
                 </Switch>
-            );
-        } else {
-            content = (
-                <Loading />
             );
         }
 

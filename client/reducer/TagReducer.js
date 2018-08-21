@@ -10,7 +10,7 @@ const FETCH_TAGS_FAILED = 'FETCH_TAG_FAILED';
 
 const fetch_tags_start = () => ({ type: FETCH_TAGS_START });
 const fetch_tags_success = data => ({ type: FETCH_TAGS_SUCCESS, payload: data.data, message: data.message });
-const fetch_tags_failed = () => ({ type: FETCH_TAGS_FAILED, message: data.message });
+const fetch_tags_failed = err => ({ type: FETCH_TAGS_FAILED, message: err.message });
 
 export default function TagReducer(state = initialState, action) {
     switch (action.type) {

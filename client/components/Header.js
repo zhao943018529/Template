@@ -1,14 +1,19 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { createRequest } from '../utilities/fetch';
 import { Link } from 'react-router-dom';
-import { fetchData } from '../utilities/fetch';
+import Loading from '../controls/Loading';
 import Dialog from '../controls/Dialog';
 import RegisterAndLogin from './RegisterAndLogin';
+import {
+    fetch_tags_start,
+    fetch_tags_success,
+    fetch_tags_failed
+} from "../reducer/TagReducer";
 
-export default class Header extends React.Component {
+class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.fetchSuccess = this._fetchSuccess.bind(this);
-        this.fetchFailed = this._fetchFailed.bind(this);
         this.state = {
             status: 0,
             categories: [],
@@ -20,20 +25,10 @@ export default class Header extends React.Component {
     }
 
     componentDidMount() {
-        fetchData('/api/category/getAll', [this.fetchSuccess, this.fetchFailed]);
-    }
-
-    _fetchSuccess(result) {
-        this.setState({
-            status: 1,
-            categories: result.data,
-        });
-    }
-
-    _fetchFailed(result) {
-        this.setState({
-            status: 3,
-            message: result.message,
+        this.props.createRequest("/api/tag/getTags", {
+            start: fetch_tags_start,
+            success: fetch_tags_success,
+            failed: fetch_tags_failed
         });
     }
 
@@ -43,14 +38,14 @@ export default class Header extends React.Component {
     }
 
     createNav() {
-        let status = this.state.status;
+        let status = this.props.tag.status;
         let content;
-        if (status === 0) {
-            content = (<div>no data</div>);
+        if (status === 0||status===1) {
+            content = (<Loading />);
         } else if (status === 3) {
-            content = (<div>{this.state.message}</div>);
+            content = (<div>{this.props.tag.message}</div>);
         } else {
-            content = this.state.categories.map(category => this.createLink(category));
+            content = this.props.tag.tags.map(tag => this.createLink(tag));
         }
 
         return (
@@ -62,12 +57,12 @@ export default class Header extends React.Component {
         );
     }
 
-    createLink(category) {
-        let path = `/${category.prefix}/${category.name}`;
+    createLink(tag) {
+        let path = `/channel/${tag.name.toLocaleLowerCase()}`;
 
         return (
-            <li key={category.id} className="nav-item">
-                <a className="nav-link" onClick={this.handleClick.bind(this, path)} href="#">{category.displayName}</a>
+            <li key={tag.id} className="nav-item">
+                <a className="nav-link" onClick={this.handleClick.bind(this, path)} href="#">{tag.name}</a>
             </li>
         );
     }
@@ -151,3 +146,14 @@ export default class Header extends React.Component {
         );
     }
 }
+
+
+const mapStateToProps = state => ({
+    tag: state.tag
+});
+
+const mapPropsToDispatch = {
+    createRequest
+};
+
+export default connect(mapStateToProps, mapPropsToDispatch)(Header);

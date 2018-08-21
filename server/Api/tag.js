@@ -16,18 +16,23 @@ router.get('/getTags', function (req, res, next) {
 });
 
 router.post('/addTag', function (req, res, next) {
-        let tag = new Tag(req.body);
-        tag.save(function (err, doc) {
-            if (err) {
-                next(err);
-            } else {
-                let result = {
-                    status: 200,
-                    message: "add tag successfully",
-                };
-                res.json(result);
-            }
-        });
+    let body = req.body;
+    console.log(body);
+    let tag = new Tag({
+        name: body.name,
+        description: body.description,
+    });
+    tag.save(function (err, doc) {
+        if (err) {
+            next(err);
+        } else {
+            let result = {
+                status: 200,
+                message: "add tag successfully",
+            };
+            res.json(result);
+        }
+    });
 });
 
 router.get('/delTag', function (req, res, next) {
@@ -49,13 +54,13 @@ router.get('/delTag', function (req, res, next) {
     }
 });
 
-router.get('/updateTag', function (req, res, next) {
-    let query = req.query;
-    if (query.id) {
-        Tag.findOneAndUpdate({ _id: query.id },
+router.post('/updateTag', function (req, res, next) {
+    let body = req.body;
+    if (body.id) {
+        Tag.findOneAndUpdate({ _id: body.id },
             {
-                name: query.name,
-                description: query.description
+                name: body.name,
+                description: body.description
             }, { new: true }).exec(function (err, tag) {
                 if (err) {
                     next(err);

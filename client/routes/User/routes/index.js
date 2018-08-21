@@ -16,16 +16,6 @@ const createRoutes =store=>(
             path: '/tag',
             key: 'tag',
             render: props => {
-                let resetState = store.getState();
-                let tagRelated = require('../../../reducer/TagReducer');
-                if(!resetState.tag){
-                    resetState.tag=tagRelated.initialState;
-                }
-                let newReducer = injectReducers(store, [{
-                    key: 'tag',
-                    reducer: tagRelated.default
-                }]);
-                store.reset(newReducer, resetState);
                 return (<Bundle load={() => import('./Tag')} {...props} />);
             },
         }

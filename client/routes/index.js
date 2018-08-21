@@ -46,6 +46,13 @@ const createRoutes = store => ([
         },
     },
     {
+        path: '/editor/new',
+        key: 'editor',
+        render: props => {
+            return <Bundle load={() => import('./Editor')} {...props} />;
+        },
+    },
+    {
         path: '/u/:uname_uid',
         key: 'user',
         render: props => {

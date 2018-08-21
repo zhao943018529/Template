@@ -23,17 +23,19 @@ export default class UserView extends React.Component {
     }
 
     createNav() {
+        let { match, history } = this.props;
+        let tagUrl = `${match.url}/tag`;
         return (
             <nav className="user-action-nav">
                 <ul className="nav nav-list">
                     <div className="avatar">
                     </div>
-                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this,'/')}>
+                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this, '/editor/new')}>
                         <i className="link-icon fa fa-pencil-square-o" aria-hidden="true"></i>
                         <a className="title right" href="#">
                             write article</a>
                     </li>
-                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this,'/tag')}>
+                    <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this, tagUrl)}>
                         <i className="link-icon fa fa-tag" aria-hidden="true"></i>
                         <a className="title right" href="#">
                             Tag</a>
@@ -44,8 +46,8 @@ export default class UserView extends React.Component {
     }
 
     handleRouteClick(path, event) {
-        let { match, history } = this.props;
-        history.push(`${match.url}${path}`);
+        let history = this.props.history;
+        history.push(path);
         event.stopPropagation();
     }
 

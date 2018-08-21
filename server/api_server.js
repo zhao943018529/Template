@@ -5,9 +5,9 @@ const session = require("express-session");
 const https = require("https");
 const app = express();
 
-
 const db = require('../db');
 const userMiddleware = require('./middlewares/UserMiddleware');
+const upload = require('./Api/upload');
 const user=require('./Api/user');
 const tag = require('./Api/tag');
 
@@ -29,7 +29,8 @@ app.use(session({
 }));
 app.use(userMiddleware);
 
-app.use('/category',category);
+app.use('/upload',upload);
+// app.use('/category',category);
 app.use(user);
 app.use('/tag',tag);
 

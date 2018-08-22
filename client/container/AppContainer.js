@@ -5,7 +5,7 @@ import createRoutes from '../routes';
 import history from '../history';
 import Header from '../components/Header';
 import Loading from '../controls/Loading';
-import { createRequest } from '../utilities/fetch';
+import { createRequest,setDispatch } from '../utilities/fetch';
 import {
     fetch_user_success,
     fetch_user_start,
@@ -17,8 +17,9 @@ const FETCH_USER_URL = "/api/getLoginUser";
 class AppContainer extends React.Component {
 
     componentDidMount() {
+        setDispatch(this.props.dispatch);
         history.listen(() => {
-            this.props.store.dispatch(
+            this.props.dispatch(
                 createRequest(FETCH_USER_URL, {
                     credentials: 'same-origin'
                 }, {
@@ -28,7 +29,7 @@ class AppContainer extends React.Component {
             );
         });
 
-        this.props.store.dispatch(
+        this.props.dispatch(
             createRequest(FETCH_USER_URL, {
                 credentials: 'same-origin'
             }, {
@@ -58,6 +59,14 @@ class AppContainer extends React.Component {
             );
         }
 
+        let tip;
+        let msgStatus = this.props.msg.status;
+        if(msgStatus===1){
+            
+        }else if(msgStatus===2){
+
+        }
+
         return (
             <Router history={history}>
                 <div className="app-container">
@@ -72,7 +81,8 @@ class AppContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.user
+    user: state.user,
+    msg: state.msg,
 });
 
 export default connect(mapStateToProps)(AppContainer);

@@ -40,6 +40,11 @@ export default class LightTip extends React.Component{
         this.clearDelayTime();
         this.setState({
             show:false,
+        },()=>{
+            let didUnMount = this.props.didUnMount;
+            if(didUnMount){
+                didUnMount();
+            }
         });
     }
 

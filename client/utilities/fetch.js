@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import { reset_status, success_status, failed_status } from '../reducer/MessageReducer';
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -28,10 +29,14 @@ export function fetchData() {
     }
     let i = 0;
     callbacks.length === 3 && callbacks[i++]();
-    return fetch(args[0], option).then(checkStatus).then(parseJSON)
+    return fetch(args[0], option)
+        .then(checkStatus)
+        .then(parseJSON)
         .then(data => callbacks[i++](data))
-        .catch(err => callbacks[i](err));
+        .catch(err => callbacks[++i](err));
 }
+
+
 
 export function createRequest() {
     if (arguments.length < 2) {
@@ -45,6 +50,9 @@ export function createRequest() {
         return fetch(url, option).then(checkStatus).then(parseJSON)
             .then(data => {
                 if (data.status == 200) {
+                    dispatch(actions.success(data));
+                } else if (data.status == 300) {
+                    //request successully but validate failed
                     dispatch(actions.success(data));
                 } else {
                     throw new Error(data.message);

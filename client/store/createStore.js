@@ -3,7 +3,6 @@ import thunk from 'redux-thunk';
 
 import {makeRootReducer} from '../reducer/createReducer';
 
-
 const RESETNAME='@RESET';
 
 const resetReducerCreator = (reducer,resetState)=>(state,action)=>{

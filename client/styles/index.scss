@@ -350,8 +350,10 @@ li {
 /**End**/
 
 /**Editor**/
-.view-editor{
-    height:600px;
+.view-editor {
     background: #FFFFFF;
+    & .editor-container {
+        height: 420px;
+    }
 }
 /**End**/

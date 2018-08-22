@@ -10,6 +10,7 @@ router.get('/getTags', function (req, res, next) {
             res.json({
                 status: 200,
                 data: tags,
+                message:'Obtain tags successfully',
             });
         }
     });

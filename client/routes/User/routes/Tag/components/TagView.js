@@ -8,6 +8,7 @@ import {
     fetch_tags_success,
     fetch_tags_failed
 } from "../../../../../reducer/TagReducer";
+import {success_status,failed_status} from '../../../../../reducer/MessageReducer';
 
 export default class Tag extends React.Component {
     constructor(props) {
@@ -21,7 +22,6 @@ export default class Tag extends React.Component {
 
         this.state = {
             status: 0,
-            times: 0,
             IsExpandCard: false,
             tag: Map({
                 id: "",
@@ -198,21 +198,20 @@ export default class Tag extends React.Component {
     }
 
     _postStart() {
-        this.setState({ status: 1, times: 0, message: '', });
+        this.setState({ status: 1, message: '' });
     }
 
     _postSuccess(data) {
         let emptyTag = this.state.tag.merge(this.defaultTag);
-        let times = this.state.times;
         this.setState(
             {
                 status: 2,
-                times: ++times,
                 IsExpandCard: false,
                 tag: emptyTag,
                 message: data.message
             },
             () => {
+                this.props.dispatch(success_status(data));
                 this.fetchData();
             }
         );
@@ -221,8 +220,9 @@ export default class Tag extends React.Component {
     _postFailed(err) {
         this.setState({
             status: 3,
-            times: 1,
             message: err.message
+        },()=>{
+            this.props.dispatch(failed_status(err));
         });
     }
 
@@ -266,15 +266,6 @@ export default class Tag extends React.Component {
             content = <Loading />;
         }
 
-        let tip;
-        if (this.state.times <= 1) {
-            if (this.state.status === 2) {
-                tip = (<LightTip type="success" message={this.state.message} />);
-            } else if (this.state.status === 3) {
-                tip = (<LightTip type="failed" message={this.state.message} />);
-            }
-        }
-
         let newCardPane;
         if (this.state.IsExpandCard) {
             newCardPane = this.createNewTag();
@@ -292,7 +283,6 @@ export default class Tag extends React.Component {
                     <div className="card-body text-dark clearfix">
                         {content}
                         {newCardPane}
-                        {tip}
                     </div>
                 </div>
             </div>

@@ -66,7 +66,7 @@ export default class TagControl extends React.Component{
 		return (
 			<div className="typehelper-fortags" onClick={this.handleFocusInput}>
 				{tagElems}
-			   	<input name="tag" onKeyDown={this.handleEnterForTag} onChange={event=>this.setState({value:event.target.value})} type="text" value={value} ref={(elem)=>this.setInput(elem)} className="typehelper-fortags-input"  placeholder="tag,for example:php,you can use [,;] split"/>
+			   	<input name="tag" onKeyDown={this.handleEnterForTag} autocomplete="off" onChange={event=>this.setState({value:event.target.value})} type="text" value={value} ref={(elem)=>this.setInput(elem)} className="typehelper-fortags-input"  placeholder="tag,for example:php,you can use [,;] split"/>
 			</div>
 			);
 	}

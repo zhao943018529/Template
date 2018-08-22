@@ -5,19 +5,20 @@ import createRoutes from '../routes';
 import history from '../history';
 import Header from '../components/Header';
 import Loading from '../controls/Loading';
-import { createRequest,setDispatch } from '../utilities/fetch';
+import { createRequest } from '../utilities/fetch';
 import {
     fetch_user_success,
     fetch_user_start,
     fetch_user_error
 } from '../reducer/UserReducer';
+import { reset_status, success_status, failed_status } from '../reducer/MessageReducer';
+import LightTip from '../controls/LightTip';
 
 const FETCH_USER_URL = "/api/getLoginUser";
 
 class AppContainer extends React.Component {
 
     componentDidMount() {
-        setDispatch(this.props.dispatch);
         history.listen(() => {
             this.props.dispatch(
                 createRequest(FETCH_USER_URL, {
@@ -60,11 +61,11 @@ class AppContainer extends React.Component {
         }
 
         let tip;
-        let msgStatus = this.props.msg.status;
-        if(msgStatus===1){
-            
-        }else if(msgStatus===2){
-
+        let msg = this.props.msg;
+        if (msg.status === 1) {
+            tip = (<LightTip type='success' message={msg.message} didUnMount={() => { this.props.store.dispatch(reset_status()); }} />);
+        } else if (msg.status === 2) {
+            tip = (<LightTip type='failed' message={msg.message} didUnMount={() => { this.props.store.dispatch(reset_status()); }} />);
         }
 
         return (
@@ -73,6 +74,7 @@ class AppContainer extends React.Component {
                     <Header history={history} user={user} />
                     <main className="main-container maxWidth1000 u-marginAuto">
                         {content}
+                        {tip}
                     </main>
                 </div>
             </Router>

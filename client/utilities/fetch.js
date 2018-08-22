@@ -36,8 +36,6 @@ export function fetchData() {
         .catch(err => callbacks[++i](err));
 }
 
-
-
 export function createRequest() {
     if (arguments.length < 2) {
         throw new Error('parameters size expect gt 2');
@@ -50,6 +48,7 @@ export function createRequest() {
         return fetch(url, option).then(checkStatus).then(parseJSON)
             .then(data => {
                 if (data.status == 200) {
+                    dispatch(success_status(data));
                     dispatch(actions.success(data));
                 } else if (data.status == 300) {
                     //request successully but validate failed
@@ -58,6 +57,7 @@ export function createRequest() {
                     throw new Error(data.message);
                 }
             }).catch(function (err) {
+                dispatch(failed_status(err));
                 dispatch(actions.failed(err));
             });
     }

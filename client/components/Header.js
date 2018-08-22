@@ -21,15 +21,14 @@ class Header extends React.Component {
         };
 
         this.closeDialog = this._closeDialog.bind(this);
-        this.previousURL = this.props.history.location.pathname;
     }
 
     componentDidMount() {
-        this.props.createRequest("/api/tag/getTags", {
+        this.props.dispatch(createRequest("/api/tag/getTags", {
             start: fetch_tags_start,
             success: fetch_tags_success,
             failed: fetch_tags_failed
-        });
+        }));
     }
 
     handleClick(path, event) {
@@ -38,14 +37,14 @@ class Header extends React.Component {
     }
 
     createNav() {
-        let status = this.props.tag.status;
+        let tagData = this.props.tag;
         let content;
-        if (status === 0||status===1) {
+        if (tagData.status === 0 || tagData.status === 1) {
             content = (<Loading />);
-        } else if (status === 3) {
-            content = (<div>{this.props.tag.message}</div>);
+        } else if (tagData.status === 3) {
+            content = (<div>{tagData.message}</div>);
         } else {
-            content = this.props.tag.tags.map(tag => this.createLink(tag));
+            content = tagData.tags.map(tag => this.createLink(tag));
         }
 
         return (
@@ -81,8 +80,8 @@ class Header extends React.Component {
         } else {
             content = (
                 <div className="d-inline">
-                    <button type="button" onClick={() => this.setState({ status: 4 })} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
-                    <button type="button" onClick={() => this.setState({ status: 5 })} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
+                    <button type="button" onClick={() => this.setState({ status: 2 })} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
+                    <button type="button" onClick={() => this.setState({ status: 3 })} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
                 </div>
             );
         }
@@ -110,10 +109,10 @@ class Header extends React.Component {
         let status = this.state.status;
         let title;
         let type;
-        if (status === 4) {
+        if (status === 2) {
             title = "Sign in";
             type = "login";
-        } else if (status === 5) {
+        } else if (status === 3) {
             title = "Get started";
             type = "register";
         }
@@ -121,7 +120,7 @@ class Header extends React.Component {
         if (title) {
             dialog = (
                 <Dialog ClassName="top" Style={{ width: 600 }} Title={title} Close={this.closeDialog}>
-                    <RegisterAndLogin type={type} />
+                    <RegisterAndLogin type={type} dispatch={this.props.dispatch} />
                 </Dialog>
             );
         }
@@ -152,8 +151,4 @@ const mapStateToProps = state => ({
     tag: state.tag
 });
 
-const mapPropsToDispatch = {
-    createRequest
-};
-
-export default connect(mapStateToProps, mapPropsToDispatch)(Header);
+export default connect(mapStateToProps)(Header);

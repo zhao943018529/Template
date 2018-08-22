@@ -7,8 +7,11 @@ const mapStateToProps = state => ({
     tag: state.tag
 });
 
-const mapPropsToDispatch = {
-    createRequest
-};
+const mapPropsToDispatch = dispatch => ({
+    createRequest: (...args) => {
+        dispatch(createRequest(...args));
+    },
+    dispatch,
+});
 
 export default connect(mapStateToProps, mapPropsToDispatch)(TagView);

@@ -4,6 +4,7 @@ import { fetchData } from '../utilities/fetch';
 import LightTip from '../controls/LightTip';
 import _ from 'lodash';
 import { push } from '../history';
+import {failed_status,success_status} from '../reducer/MessageReducer';
 
 const LOGIN_TYPE = "login";
 
@@ -14,7 +15,7 @@ const VALI_URL = '/api/valiUsername';
 export default class RegisterAndLogin extends React.Component {
     constructor(props) {
         super(props);
-        //1loading 2success 3error
+        //0fetching 1success 2error
         this.state = {
             formData: Map({
                 username: Map({
@@ -49,9 +50,9 @@ export default class RegisterAndLogin extends React.Component {
         this.submitEventCallback = this._submitEventCallback.bind(this);
         this.postSuccess = this._postSuccess.bind(this);
         this.checkUsernameAvailable = this._checkUsernameAvailable.bind(this);
-        this.startPost = this._startPost.bind(this);
         this.postError = this._postError.bind(this);
         this.checkUsernameSuccess = this._checkUsernameSuccess.bind(this);
+        this.postStart = this._postStart.bind(this);
         this.dealyTimeId = null;
     }
 
@@ -61,20 +62,14 @@ export default class RegisterAndLogin extends React.Component {
     }
 
     _checkUsernameSuccess(result) {
-        if (result.status == 200) {
-            let fd = this.state.formData.update('username', val => val.merge({
-                valied: result.data.used ? 1 : 2,
-                validation: result.message,
-            }));
-            this.setState({
-                formData: fd,
-            });
-        } else {
-            this.setState({
-                status: 3,
-                message: result.message,
-            });
-        }
+        let fd = this.state.formData.update('username', val => val.merge({
+            valied: result.data.used ? 1 : 2,
+            validation: result.message,
+        }));
+        this.setState({
+            status: 2,
+            formData: fd,
+        });
     }
 
     getData() {
@@ -96,11 +91,11 @@ export default class RegisterAndLogin extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data),
-        }, [this.startPost, this.postSuccess, this.postError]);
+        }, [this.postSuccess, this.postError]);
         event.preventDefault();
     }
 
-    _startPost() {
+    _postStart() {
         this.setState({
             status: 1,
         });
@@ -110,7 +105,9 @@ export default class RegisterAndLogin extends React.Component {
         this.setState({
             status: 3,
             message: err.message,
-        })
+        }, () => {
+            this.props.dispatch(failed_status(err));
+        });
     }
 
     _postSuccess(result) {
@@ -119,11 +116,12 @@ export default class RegisterAndLogin extends React.Component {
                 status: 2,
                 message: result.message,
             }, () => {
+                this.props.dispatch(success_status(result));
                 push('/' + '?time=' + Date.now());
             });
         } else {
             let formData = this.state.formData;
-            _.forIn(result.error, (value, key) => {
+            _.forIn(result.data, (value, key) => {
                 formData = formData.update(key, val => ({
                     value: val.value,
                     valied: 1,
@@ -235,20 +233,9 @@ export default class RegisterAndLogin extends React.Component {
         } else {
             content = this.createFormForRegister();
         }
-        let tip;
-        switch (this.state.status) {
-            case 2:
-                tip = (<LightTip message={this.state.message} type="success" />);
-                break;
-            case 3:
-                tip = (<LightTip message={this.state.message} type="failed" />);
-                break;
-            default: break;
-        }
 
         return (
             <form onSubmit={this.submitEventCallback}>
-                {tip}
                 {content}
                 <button type="submit" disabled={this.state.status === 1} className="btn btn-primary">Submit</button>
             </form>

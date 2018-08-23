@@ -355,14 +355,10 @@ li {
     margin-top: 1.2rem;
     padding: 10px 12px;
     & .editor-container {
-        height: 420px;
+        min-height: 560px;
     }
     & .publish-footer {
         width: 100%;
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        z-index: 3;
         background-color: #DDD;
         border-top: 1px solid #CCC;
         & .operations {

@@ -1,10 +1,10 @@
 import React from 'react';
-import {findDOMNode} from 'react-dom';
+import { findDOMNode } from 'react-dom';
 import { getOffset } from '../utilities/Html';
 
 export default class Align extends React.Component {
 
-    getPopUpDomNode(){
+    getPopUpDomNode() {
         return findDOMNode(this);
     }
 
@@ -17,8 +17,9 @@ export default class Align extends React.Component {
             layout.width = width;
             layout.height = height;
             let target = this.getPopUpDomNode().offsetParent;
-            target.style.left = layout.left + "px";
-            target.style.top = layout.top + height + "px";
+            let pl = getOffset(target.offsetParent);
+            target.style.left = layout.left - pl.left + "px";
+            target.style.top = layout.top - pl.top + height + "px";
             target.style.width = width + "px";
         }
     }

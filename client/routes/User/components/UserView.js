@@ -3,8 +3,18 @@ import { Route, Switch } from 'react-router-dom';
 import createRoutes from '../routes';
 
 export default class UserView extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
+        this.state={
+            status:0,
+            articles:[],
+            message:'',
+        }
+    }
+
+
+    componentDidMount(){
+        
     }
 
     createUserInfo() {
@@ -33,12 +43,14 @@ export default class UserView extends React.Component {
                     <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this, '/editor/new')}>
                         <i className="link-icon fa fa-pencil-square-o" aria-hidden="true"></i>
                         <a className="title right" href="#">
-                            write article</a>
+                            write article
+                        </a>
                     </li>
                     <li className="nav-item u-flexCenter" onClick={this.handleRouteClick.bind(this, tagUrl)}>
                         <i className="link-icon fa fa-tag" aria-hidden="true"></i>
                         <a className="title right" href="#">
-                            Tag</a>
+                            Tag
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -52,7 +64,7 @@ export default class UserView extends React.Component {
     }
 
     createRoutes() {
-        const { match,store } = this.props;
+        const { match, store } = this.props;
         let routes = createRoutes(store);
 
         return (
@@ -60,6 +72,15 @@ export default class UserView extends React.Component {
                 {routes.map(route => {
                     return <Route {...route} path={`${match.path}${route.path}`} />
                 })}
+            </div>
+        );
+    }
+
+    createContent() {
+
+        return (
+            <div className="user-my-articles">
+
             </div>
         );
     }

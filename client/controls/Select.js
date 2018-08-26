@@ -205,6 +205,7 @@ export default class Select extends React.Component {
                 onValueChange={this.onValueChange}
                 AlignElement={this.selectionRef}
                 PopUp={this.getDropComponent()}
+                getPopupContainer={this.props.getPopupContainer}
                 >
                 <div style={this.props.Style} className={IsExpanded ? "select-wrap select-focused" : "select-wrap"}>
                     {this.createSelection()}

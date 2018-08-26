@@ -8,7 +8,11 @@ import "highlight.js/styles/monokai-sublime.css";
 import katex from "katex";
 import Quill from "quill";
 
+const Delta = Quill.import('delta');
+
+import 'katex/dist/katex.min.css';
 import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"],
@@ -45,27 +49,30 @@ export default class QuillEditor extends React.Component {
     super(props);
     this.editorRef = React.createRef();
     this.quillEditor = null;
-    this.state = { status: 0, generate: 0, value: props.value, message: "" };
+    this.state = { status: 0, generate: 0, theme: props.theme ? props.theme : "snow", value: props.value, message: "" };
     this.uploadSuccess = this._uploadSuccess.bind(this);
     this.uploadFailed = this._uploadFailed.bind(this);
     this.saveToServer = this._saveToServer.bind(this);
     this.onTextHandler = this.onTextHandler.bind(this);
+    this.resetStatus = this.resetStatus.bind(this);
+
+    hljs.registerLanguage("javascript", javascript);
+    window.katex = katex;
   }
 
   componentDidMount() {
-    hljs.registerLanguage("javascript", javascript);
     let current = this.editorRef.current;
     if (current) {
-      window.katex = katex;
       this.quillEditor = new Quill(current, {
         modules: {
+          formula: true,
           toolbar: toolbarOptions,
           syntax: {
             highlight: text => hljs.highlightAuto(text).value
           }
         },
         placeholder: "Compose an epic...",
-        theme: "snow"
+        theme: this.state.theme,
       });
 
       this.quillEditor
@@ -81,15 +88,50 @@ export default class QuillEditor extends React.Component {
     }
   }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.readOnly !== prevProps.readOnly) {
-            this.quillEditor.enable(!this.props.readOnly);
-        }
-        if (!isEqualValue(this.props.value, prevState.value) &&
-            !isEqualValue(this.props.value, this.state.value)) {
-            this.setContents(this.props.value);
-        }
+  static getDerivedStateFromProps(props, state) {
+    if (props.theme !== state.theme) {
+      return {
+        theme: props.theme,
+        generate: state.generate + 1,
+      };
+    } else {
+      return null;
     }
+  }
+
+  componentWillUnmount() {
+    if (this.quillEditor) {
+      this.unhookEditor(this.quillEditor);
+      this.quillEditor = null;
+    }
+  }
+
+  unhookEditor(editor) {
+    editor.off('tex-change');
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.generate !== this.state.generate) {
+      this.componentWillUnmount();
+    }
+
+    return true;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.generate !== this.state.generate) {
+      this.componentDidMount();
+    }
+
+    if (this.props.readOnly !== prevProps.readOnly) {
+      this.quillEditor.enable(!this.props.readOnly);
+    }
+    if (!isEqualValue(this.props.value, prevProps.value) &&
+      !isEqualValue(this.props.value, prevState.value) &&
+      !isEqualValue(this.props.value, this.state.value)) {
+      this.setContents(this.props.value);
+    }
+  }
 
   setContents(value) {
     let editor = this.quillEditor;
@@ -123,7 +165,7 @@ export default class QuillEditor extends React.Component {
   }
 
   imageHandler(cb) {
-    return function() {
+    return function () {
       let fileInput = this.container.querySelector("input.ql-image[type=file]");
       if (!fileInput) {
         fileInput = document.createElement("input");
@@ -168,7 +210,7 @@ export default class QuillEditor extends React.Component {
   _uploadSuccess(data) {
     let editor = this.quillEditor;
     let range = editor.getSelection(true);
-    editor.insertEmbed(range.index, "image", data.data.url);
+    editor.updateContents(new Delta().retain(range.index).delete(range.length).insert({ image: data.data.url }));
     this.setState({
       status: 2,
       message: data.message
@@ -182,17 +224,24 @@ export default class QuillEditor extends React.Component {
     });
   }
 
+  resetStatus() {
+    this.setState({
+      status: 0,
+      message: '',
+    });
+  }
+
   render() {
     let status = this.state.status;
     let tip;
     if (status === 2) {
-      tip = <LightTip type="success" message={this.state.message} />;
-    } else {
-      tip = <LightTip type="failed" message={this.state.message} />;
+      tip = <LightTip type="success" message={this.state.message} didUnMount={this.resetStatus} />;
+    } else if (status === 3) {
+      tip = <LightTip type="failed" message={this.state.message} didUnMount={this.resetStatus} />;
     }
 
     return (
-      <div className="editor-wrapper">
+      <div className="editor-wrapper" key={this.state.generate}>
         <div className="editor-container" ref={this.editorRef} />
         {tip}
       </div>

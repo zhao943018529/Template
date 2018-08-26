@@ -8,8 +8,9 @@ const app = express();
 const db = require('../db');
 const userMiddleware = require('./middlewares/UserMiddleware');
 const upload = require('./Api/upload');
-const user=require('./Api/user');
+const user = require('./Api/user');
 const tag = require('./Api/tag');
+const article = require('./Api/article');
 
 const category = require('./Api/category');
 
@@ -29,18 +30,19 @@ app.use(session({
 }));
 app.use(userMiddleware);
 
-app.use('/upload',upload);
+app.use('/upload', upload);
 // app.use('/category',category);
 app.use(user);
-app.use('/tag',tag);
+app.use('/tag', tag);
+app.use('/article', article);
 
-app.get('/v2/movie/in_theaters',function(request,response){
-    let data='';
-    let req = https.request('https://api.douban.com/v2/movie/in_theaters',res=>{   
-        res.on('data',chunk=>{
-            data+=chunk;
+app.get('/v2/movie/in_theaters', function (request, response) {
+    let data = '';
+    let req = https.request('https://api.douban.com/v2/movie/in_theaters', res => {
+        res.on('data', chunk => {
+            data += chunk;
         });
-        res.on('end',()=>{
+        res.on('end', () => {
             response.setHeader('Content-Type', 'application/json');
             response.end(data);
         });
@@ -48,7 +50,7 @@ app.get('/v2/movie/in_theaters',function(request,response){
     req.end();
 });
 
-app.use(function(err,req,res,next){
+app.use(function (err, req, res, next) {
     console.error(err.stack)
     res.status(500).send('Something broke!');
 });

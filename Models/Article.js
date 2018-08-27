@@ -35,14 +35,14 @@ ArticleSchema.virtual("id").get(function () {
 
 ArticleSchema.set("toJSON", { virtuals: true });
 
-ArticleSchema.static.getArticlesByUid = function (uid, cb) {
-    return this.find({ author: uid }).select('_id title').populate({
-        path: 'User',
+ArticleSchema.statics.getArticlesByUid = function (uid, cb) {
+    return this.find({ author: uid }).select('_id title author tags').populate({
+        path: 'author',
         select: '_id nickname',
     }).populate({
-        path: 'Tag',
+        path: 'tags',
         select: '_id name',
     }).exec(cb);
 }
-
+//.select('_id title author tags')
 module.exports = mongoose.model('Article', ArticleSchema);

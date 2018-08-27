@@ -2,12 +2,14 @@ import { combineReducers } from "redux";
 import UserReducer from './UserReducer';
 import TagReducer from './TagReducer';
 import MessageReducer from './MessageReducer';
+import ArticleReducer from './ArticleReducer';
 
 function makeRootReducer(asyncReducers) {
 
     return combineReducers({
         tag: TagReducer,
         user: UserReducer,
+        article:ArticleReducer,
         msg: MessageReducer,
         ...asyncReducers,
     });

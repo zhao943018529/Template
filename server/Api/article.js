@@ -39,12 +39,19 @@ router.post('/add', function (req, res, next) {
 });
 
 
-router.get('/get/:uid',function(req,res,next){
+router.get('/get/:uid', function (req, res, next) {
     let uid = req.params.uid;
-    Article.getArticlesByUid(uid,function(err,article){
-
+    Article.getArticlesByUid(uid, function (err, articles) {
+        if (err) {
+            next(err);
+        } else {
+            res.json({
+                status: 200,
+                data: articles,
+                message: 'get article successfully',
+            });
+        }
     });
-
 });
 
 module.exports = router;

@@ -12,11 +12,6 @@ export default class UserView extends React.Component {
         }
     }
 
-
-    componentDidMount(){
-        
-    }
-
     createUserInfo() {
 
         return (
@@ -72,15 +67,6 @@ export default class UserView extends React.Component {
                 {routes.map(route => {
                     return <Route {...route} path={`${match.path}${route.path}`} />
                 })}
-            </div>
-        );
-    }
-
-    createContent() {
-
-        return (
-            <div className="user-my-articles">
-
             </div>
         );
     }

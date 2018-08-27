@@ -1,75 +1,70 @@
-.typehelper-fortags{
+.typehelper-fortags {
     position: relative;
     background-color: #fff;
     border: 1px solid #ccc;
-    padding:5px 5px 0 5px;
-  
-      & .typehelper-item{
+    padding: 5px 5px 0 5px;
+    & .typehelper-item {
         display: inline-block;
-        background-color: rgba(1,126,102,0.08);
-        font-size:13px;
-        line-height:22px;
+        background-color: rgba(1, 126, 102, 0.08);
+        font-size: 13px;
+        line-height: 22px;
         color: #017e66;
-        padding:0 5px;
-        margin-bottom:5px;
-        margin-right:6px;
-  
-          & > span{
-              cursor:pointer;
-              margin-left: 5px;
-          }
-      }
-      & .typehelper-fortags-input{
-          border: none;
-          box-shadow: none;
-          outline: none;
-          background-color: transparent;
-          height:23px;
-          padding:0;
-          margin:0 0 5px 0;
-          max-width:100%;
-      }
-  }
-  
-  .tab-content{
-    position:absolute;
-    box-shadow:0px 6px 12px 0px rgba(0,0,0,0.18);
-    border:1px solid #DDDDDD;
-    padding:15px;
-    max-width:320px;
+        padding: 0 5px;
+        margin-bottom: 5px;
+        margin-right: 6px;
+        &>span {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    }
+    & .typehelper-fortags-input {
+        border: none;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        height: 23px;
+        padding: 0;
+        margin: 0 0 5px 0;
+        max-width: 100%;
+    }
+}
+
+.tab-content {
+    position: absolute;
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.18);
+    border: 1px solid #DDDDDD;
+    padding: 15px;
+    max-width: 320px;
     background-color: #fff;
     border-radius: 4px;
-    z-index:2;
-  }
-  
-  .taglist-inline{
-      list-style:none;
-      padding:0;
-      margin-bottom:0;
-  
-      &.ib{
-          display:inline-block;
-      }
-  
-      & > li{
-          display:inline-block;
-          margin-right:5px;
-      }
-  }
-  
-  .tag{
-    display:inline-block;
-     background-color: rgba(1,126,102,0.08);
-    text-align: center;
-    color: #017E66;
-    padding:0 6px;
-    font-size:13px;
-    line-height:22px;
-    text-decoration: none;
-  
-    &.active,&:hover{
-      background-color: #017E66;
-      color: #fff;
-      text-decoration: none;
+    z-index: 2;
+}
+
+.taglist-inline {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    &.ib {
+        display: inline-block;
     }
-  }
+    &>li {
+        display: inline-block;
+        margin-right: 5px;
+    }
+    & .tag {
+        display: inline-block;
+        background-color: rgba(1, 126, 102, 0.08);
+        text-align: center;
+        color: #017E66;
+        padding: 0 6px;
+        font-size: 13px;
+        line-height: 22px;
+        text-decoration: none;
+        &.active,
+        &:hover {
+            background-color: #017E66;
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}

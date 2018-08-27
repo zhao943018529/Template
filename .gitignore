@@ -1,3 +1,4 @@
 /node_modules/
 /dist/
+/static/photos/
 package-lock.json

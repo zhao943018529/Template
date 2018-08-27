@@ -46,10 +46,15 @@ const createRoutes = store => ([
         },
     },
     {
-        path: '/editor/new',
+        path: '/editor/:type/:aid',
         key: 'editor',
         render: props => {
-            return <Bundle load={() => import('./Editor')} {...props} />;
+            let user = store.getState().user;
+            if (user.status === 2) {
+                return <Bundle load={() => import('./Editor')} {...props} />;
+            } else {
+                return <Redirect to='/login' />;
+            }
         },
     },
     {
@@ -58,16 +63,11 @@ const createRoutes = store => ([
         render: props => {
             let user = store.getState().user;
             if (user.status === 2) {
-                return <Bundle load={() => import('./User/components/UserView')} {...props} user={user.user} store={store} />;
+                return <Bundle load={() => import('./User')} {...props} store={store} />;
             } else {
                 return <Redirect to='/login' />;
             }
         },
-    },
-    {
-        path: '/login',
-        key: 'login',
-        render: props => (<Bundle load={() => import('./Login')} {...props} />),
     },
     {
         path: '/login',

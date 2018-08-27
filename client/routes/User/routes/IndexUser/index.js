@@ -1,9 +1,3 @@
-import React from 'react';
+import IndexUser from './container/IndexUserContainer';
 
-export default class Index extends React.Component{
-    render(){
-        return (
-            <div>user articles</div>
-        );
-    }
-}
+export default IndexUser;

@@ -14,7 +14,7 @@ export default class ListView extends React.Component {
             <div className="info-row opt-row">
                 <ul className="action-list">
                     <li className="action-item">
-                        <a href={`/editor/edit/${aid}`} className="title-box" onClick>
+                        <a href={`/editor/edit/${aid}`} className="title-box">
                             <i className="fa fa-pencil" aria-hidden="true"></i>
                         </a>
                     </li>
@@ -36,23 +36,23 @@ export default class ListView extends React.Component {
         event.stopPropagation();
     }
 
-    createTitle(title, url) {
+    createTitle(title) {
 
         return (
             <div className="info-row title-row">
-                <a href={url} className="title">{title}</a>
+                <span className="title">{title}</span>
             </div>
         );
     }
 
     createMeta(user, tags) {
-        let items = tags.map(tag => (<a key={tag.id}>{tag.name}</a>));
+        let items = tags.map(tag => (<span key={tag.id}>{tag.name}</span>));
 
         return (
             <div className="info-row meta-row">
                 <ul className="meta-list">
                     <li className="item username">
-                        <a>{user.nickname}</a>
+                        <span>{user.nickname}</span>
                     </li>
                     <li className="item tag">
                         {items}
@@ -66,16 +66,16 @@ export default class ListView extends React.Component {
         let url = `/post/${article.id}`;
 
         return (
-            <li className="entry-item">
-                <a href={url} className="entry-link">
-                    <div className="entry-content">
-                        <div className="entry-info">
+            <li key={article.id} className="entry-item">
+                <div className="entry-content">
+                    <div className="entry-info">
+                        <a href={url} className="entry-link">
                             {this.createMeta(article.author, article.tags)}
-                            {this.createTitle(title, url)}
-                            {this.props.editable ? this.createOptPane(article.id) : undefined}
-                        </div>
+                            {this.createTitle(article.title)}
+                        </a>
+                        {this.props.editable ? this.createOptPane(article.id) : undefined}
                     </div>
-                </a>
+                </div>
             </li>
         );
     }

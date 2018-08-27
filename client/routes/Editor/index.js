@@ -32,6 +32,7 @@ class Editor extends React.Component {
         this.state = {
             status: 0,
             formData: Map({
+                id: null,
                 title: '',
                 tags: List([]),
                 content: Map(),
@@ -50,8 +51,14 @@ class Editor extends React.Component {
         this.postError = this.postError.bind(this);
     }
 
-    componentDidMount(){
-        
+    componentDidMount() {
+        let aid = this.props.match.params.aid;
+        if (aid) {
+            fetchData(`/api/article/getArticle/${aid}`, [
+                this.postSuccess,
+                this.postError
+            ]);
+        }
     }
 
     handleTagsChange(ids) {
@@ -93,7 +100,7 @@ class Editor extends React.Component {
     handleSubmit(event) {
         let fd = this.state.formData.toJS();
 
-        fetchData('/api/article/add', {
+        fetchData('/api/article/addOrUpdate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,10 +115,23 @@ class Editor extends React.Component {
 
     postSuccess(res) {
         if (res.status === 200) {
-            this.setState({
-                status: 2,
-                message: res.message,
-            });
+            if (this.state.status !== 2 && this.props.match.params.aid) {
+                let article = res.data;
+                let fd = this.state.formData.withMutations(map => {
+                    map.set('id', article.id).set('title', article.title).set('tags', map.get('tags')
+                        .clear().concat(article.tags)).set('content', JSON.parse(article.content));
+                });
+                this.setState({
+                    status: 2,
+                    formData: fd,
+                    message: res.message,
+                });
+            } else {
+                this.setState({
+                    status: 4,
+                    message: res.message,
+                });
+            }
         } else {
             this.setState({
                 status: 3,
@@ -197,7 +217,7 @@ class Editor extends React.Component {
 
     render() {
         let content;
-        if (this.state.status === 2) {
+        if (this.state.status === 4) {
             content = this.createPostResponse();
         } else {
             content = this.createForm();

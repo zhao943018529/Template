@@ -5,39 +5,51 @@ const Article = require('../../Models/Article');
 const _ = require('lodash');
 
 
-router.post('/add', function (req, res, next) {
+router.post('/addOrUpdate', function (req, res, next) {
     if (req.user) {
-        console.log(req.user);
         let content = {
-            author: req.user.id,
             title: req.body.title,
             tags: req.body.tags,
             content: JSON.stringify(req.body.content),
         };
-        let article = new Article(content);
-        article.save(function (err, doc) {
-            if (err) {
-                if (err.errors) {
-                    res.json({
-                        status: 300,
-                        data: err.errors,
-                        message: 'validate failed',
-                    });
-                } else {
+        if (req.body.id) {
+            content.updatedAt = Date.now();
+            Article.findByIdAndUpdate(req.body.id, content, function (err) {
+                if (err) {
                     next(err);
+                } else {
+                    res.json({
+                        status: 200,
+                        message: 'update article successfully',
+                    });
                 }
-            } else {
-                res.json({
-                    status: 200,
-                    message: 'post article successfully',
-                });
-            }
-        });
+            });
+        } else {
+            content.author = req.user.id;
+            let article = new Article(content);
+            article.save(function (err, doc) {
+                if (err) {
+                    if (err.errors) {
+                        res.json({
+                            status: 300,
+                            data: err.errors,
+                            message: 'validate failed',
+                        });
+                    } else {
+                        next(err);
+                    }
+                } else {
+                    res.json({
+                        status: 200,
+                        message: 'post article successfully',
+                    });
+                }
+            });
+        }
     } else {
         res.status(400).send('Login Invalid');
     }
 });
-
 
 router.get('/get/:uid', function (req, res, next) {
     let uid = req.params.uid;
@@ -52,6 +64,26 @@ router.get('/get/:uid', function (req, res, next) {
             });
         }
     });
+});
+
+router.get('/getArticle/:id', function (req, res, next) {
+    let id = req.params.id;
+    if (id) {
+        Article.findById(id, function (err, article) {
+            if (err) {
+                next(err);
+            } else {
+                res.json({
+                    status: 200,
+                    data: article,
+                    message: 'fetch article successfully',
+                });
+            }
+        });
+    } else {
+        res.status(400).send('please pass parameter id');
+    }
+
 });
 
 module.exports = router;

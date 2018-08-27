@@ -50,6 +50,10 @@ class Editor extends React.Component {
         this.postError = this.postError.bind(this);
     }
 
+    componentDidMount(){
+        
+    }
+
     handleTagsChange(ids) {
         let formData = this.state.formData;
         let idList = List(ids);

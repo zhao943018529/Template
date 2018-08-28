@@ -1,10 +1,11 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import moment from 'moment';
 import QuillEditor from '../../controls/QuillEditor';
 import Loading from '../../controls/Loading';
 import { fetchData } from '../../utilities/fetch';
 
-export default class Article extends React.Component {
+class ArticleView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,6 +59,25 @@ export default class Article extends React.Component {
     }
 
 
+
+    createCommentBox() {
+        let user = this.props.user.user;
+        let isLogin = !!user;
+        let content
+
+
+        return (
+            <div className="comment-box">
+                <div className="comment-title">Comment</div>
+                <div className="comment-form unauthorized">
+                    <div className="unauthorized-panel">
+                        <button type="button" className="btn btn-outline-primary btn-sm">Login</button><div className="placeholder">Show your point of view</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     createArticleArea() {
         let article = this.state.article;
 
@@ -87,3 +107,9 @@ export default class Article extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state=>({
+    user:state.user,
+});
+
+export default connect(mapStateToProps)(ArticleView);

@@ -66,7 +66,7 @@ export default class QuillEditor extends React.Component {
       this.quillEditor = new Quill(current, {
         modules: {
           formula: true,
-          toolbar: toolbarOptions,
+          toolbar: !this.props.readOnly && toolbarOptions,
           syntax: {
             highlight: text => hljs.highlightAuto(text).value
           }
@@ -74,12 +74,12 @@ export default class QuillEditor extends React.Component {
         placeholder: "Compose an epic...",
         theme: this.state.theme,
       });
-
-      this.quillEditor
-        .getModule("toolbar")
-        .addHandler("image", this.imageHandler(this.saveToServer));
       if (this.props.readOnly) {
         this.quillEditor.disable();
+      }else{
+        this.quillEditor
+        .getModule("toolbar")
+        .addHandler("image", this.imageHandler(this.saveToServer));
       }
       if (this.state.value) {
         this.quillEditor.setContents(this.state.value);

@@ -69,7 +69,7 @@ router.get('/get/:uid', function (req, res, next) {
 router.get('/getArticle/:id', function (req, res, next) {
     let id = req.params.id;
     if (id) {
-        Article.findById(id, function (err, article) {
+        Article.findArticleDetailById(id, function (err, article) {
             if (err) {
                 next(err);
             } else {

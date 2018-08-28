@@ -1,4 +1,7 @@
 $fa-font-path:"./icons/fonts";
+$body-bg:#f4f5f5;
+$font-size-base:.8rem;
+
 @import "./icons/index";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -39,11 +42,7 @@ $fa-font-path:"./icons/fonts";
 @import "./controls/dialog";
 @import "./controls/tagcontrol";
 @import "./controls/loading";
-/**/
-
-body {
-    background: #f4f5f5;
-}
+/**common css**/
 
 a {
     text-decoration: none;
@@ -69,9 +68,11 @@ li {
     list-style: none;
 }
 
-/**/
-
-/** Header **/
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .maxWidth1000 {
     max-width: 1000px;
@@ -107,10 +108,6 @@ li {
     margin-right: auto !important;
 }
 
-.metabar {
-    position: relative;
-}
-
 .verticalAlign-middle {
     vertical-align: middle;
 }
@@ -121,6 +118,14 @@ li {
 
 .marginRight16 {
     margin-right: 16px;
+}
+
+/*end*/
+
+/** Header **/
+
+.metabar {
+    position: relative;
 }
 
 .metabar-header {
@@ -326,9 +331,11 @@ li {
         align-items: center;
     }
 }
+
 /**/
 
 /**tag management**/
+
 .tag-container {
     position: relative;
     background: #fff;
@@ -342,14 +349,16 @@ li {
     }
 }
 
-.add-tag-container{
-  position: absolute;
-  left: 50%;
-  top: 50%;
+.add-tag-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }
+
 /**End**/
 
 /**Editor**/
+
 .view-editor {
     background: #FFFFFF;
     margin-top: 1.2rem;
@@ -367,11 +376,13 @@ li {
         }
     }
 }
+
 /**End**/
 
 /****/
-.user-my-articles{
-    background:#ffffff;
+
+.user-my-articles {
+    background: #ffffff;
     margin-top: 1rem;
 }
 
@@ -439,7 +450,7 @@ li {
 .action-list {
     padding: 0;
     display: inline-flex;
-    & > .action-item {
+    &>.action-item {
         height: 2rem;
         font-size: 1.083rem;
         line-height: 1;
@@ -459,4 +470,106 @@ li {
         }
     }
 }
+
+/****/
+
+/**article detail**/
+
+.column-view {
+    background: #ffffff;
+    margin-top: 1.2rem;
+}
+
+.article-area {
+    margin-bottom: 1.5rem;
+    padding: 0 1.6rem;
+}
+
+.article {
+    margin-bottom: 3rem;
+    padding: 2rem 0 0;
+}
+
+.author-info {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    & .author-portrait {
+        margin-right: .6rem;
+        & .avatar {
+            width: 3.333rem;
+            height: 3.333rem;
+            border-radius: 50%;
+        }
+    }
+    & .author-box {
+        min-width: 0;
+        & .username {
+            display: inline-block;
+            max-width: 100%;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+        }
+        & .meta-box {
+            font-size: 1rem;
+            color: #909090;
+        }
+        & .view-count {
+            margin-left: .5rem;
+        }
+    }
+}
+
+.article-title {
+    margin: .67em 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.article-content {
+    word-break: break-word;
+    line-height: 1.75;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.comment-box {
+    padding: 0 2rem;
+    & .comment-title {
+        margin-bottom: 1.2rem;
+        font-size: 1.3rem;
+        line-height: 1.2;
+        font-weight: 500;
+        text-align: center;
+        color: #909090;
+    }
+}
+
+.comment-form {
+    position: relative;
+    padding: 1.3rem 1.3rem 1.3rem 6rem;
+    background-color: #f8f9fa;
+    border: 1px solid #f1f1f1;
+    border-radius: 4px;
+    &.unauthorized {
+        padding: 0;
+    }
+}
+
+.unauthorized-panel {
+    display: flex;
+    padding: 2.5rem 1rem;
+    justify-content: center;
+    align-items: center;
+    & .placeholder {
+        margin-left: 1.3rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #4a4a4a;
+    }
+}
+
 /****/

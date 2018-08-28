@@ -46,7 +46,7 @@ const createRoutes = store => ([
         },
     },
     {
-        path: '/editor/:type/:aid',
+        path: '/editor/:type',
         key: 'editor',
         render: props => {
             let user = store.getState().user;
@@ -67,6 +67,13 @@ const createRoutes = store => ([
             } else {
                 return <Redirect to='/login' />;
             }
+        },
+    },
+    {
+        path: '/post/:id',
+        key: 'post',
+        render: props => {
+            return <Bundle load={() => import('./Article')} {...props} store={store} />;
         },
     },
     {

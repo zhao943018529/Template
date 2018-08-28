@@ -52,8 +52,9 @@ class Editor extends React.Component {
     }
 
     componentDidMount() {
-        let aid = this.props.match.params.aid;
-        if (aid) {
+        let type = this.props.match.params.type;
+        if (type === 'edit') {
+            let aid = this.props.location.query.aid;
             fetchData(`/api/article/getArticle/${aid}`, [
                 this.postSuccess,
                 this.postError
@@ -115,11 +116,11 @@ class Editor extends React.Component {
 
     postSuccess(res) {
         if (res.status === 200) {
-            if (this.state.status !== 2 && this.props.match.params.aid) {
+            if (this.state.status !== 2 && this.props.match.params.type==='edit') {
                 let article = res.data;
                 let fd = this.state.formData.withMutations(map => {
                     map.set('id', article.id).set('title', article.title).set('tags', map.get('tags')
-                        .clear().concat(article.tags)).set('content', JSON.parse(article.content));
+                        .clear().concat(_.map(article.tags, tag => tag.id))).set('content', JSON.parse(article.content));
                 });
                 this.setState({
                     status: 2,

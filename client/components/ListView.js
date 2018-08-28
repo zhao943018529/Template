@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class ListView extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.deleteArticle = this.deleteArticle.bind(this);
@@ -14,12 +14,12 @@ export default class ListView extends React.Component {
             <div className="info-row opt-row">
                 <ul className="action-list">
                     <li className="action-item">
-                        <a href={`/editor/edit/${aid}`} className="title-box">
+                        <a href={`/editor/edit?aid=${aid}`} className="title-box">
                             <i className="fa fa-pencil" aria-hidden="true"></i>
                         </a>
                     </li>
                     <li className="action-item">
-                        <a onClick={this.deleteArticle} data-aid={aid}  className="title-box">
+                        <a onClick={this.deleteArticle} data-aid={aid} className="title-box">
                             <i className="fa fa-times" aria-hidden="true"></i>
                         </a>
                     </li>
@@ -28,8 +28,8 @@ export default class ListView extends React.Component {
         );
     }
 
-    deleteArticle(event){
-        let current =event.currentTarget;
+    deleteArticle(event) {
+        let current = event.currentTarget;
         let aid = current.dataset['aid'];
         this.props.onDelete(aid);
         event.preventDefault();

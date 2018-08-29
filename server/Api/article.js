@@ -60,10 +60,25 @@ router.get('/get/:uid', function (req, res, next) {
             res.json({
                 status: 200,
                 data: articles,
-                message: 'get article successfully',
+                message: 'get articles successfully',
             });
         }
     });
+});
+
+router.get('/getByTags', function (req, res, next) {
+    let tids = req.query.tids;
+    Article.getArticlesByTags(tids, function (err, cb) {
+        if (err) {
+            next(err);
+        } else {
+            res.json({
+                status: 200,
+                data: articles,
+                message: 'get articles successfully',
+            });
+        }
+    })
 });
 
 router.get('/getArticle/:id', function (req, res, next) {

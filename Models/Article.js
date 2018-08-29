@@ -44,5 +44,15 @@ ArticleSchema.statics.getArticlesByUid = function (uid, cb) {
         select: '_id name',
     }).exec(cb);
 }
+
+ArticleSchema.statics.getArticlesByTags = function (tids, cb) {
+    return this.find({ tags: { $in: tids } }).select('_id title author tags').populate({
+        path: 'author',
+        select: '_id nickname',
+    }).populate({
+        path: 'tags',
+        select: '_id name',
+    }).exec(cb);
+}
 //.select('_id title author tags')
 module.exports = mongoose.model('Article', ArticleSchema);

@@ -28,6 +28,7 @@ export default function reducer(state = initialState, action) {
         case FETCH_ARTICLES_START:
             return {
                 ...state,
+                articles: [],
                 statue: 1,
             };
         case FETCH_ARTICLES_SUCCESS:

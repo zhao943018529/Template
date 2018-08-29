@@ -1,22 +1,3 @@
-import React from 'react';
+import HomeContainer from './container/HomeContainer';
 
-export default class Home extends React.Component{
-
-    constructor(props){
-        super(props);
-    }
-
-    componentDidMount(){
-        
-    }
-
-    render(){
-        return (
-                <div className="index-view">
-                    <div className="entry-view">
-
-                    </div>
-                </div>
-            );
-    }
-}
+export default HomeContainer;

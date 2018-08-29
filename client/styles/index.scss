@@ -42,7 +42,8 @@ $font-size-base:1rem;
 @import "./controls/tagcontrol";
 @import "./controls/loading";
 /**common css**/
-html{
+
+html {
     font-size: 12px;
 }
 
@@ -755,6 +756,36 @@ li {
             }
         }
     }
+}
+
+/****/
+
+/**home**/
+
+.index-view {
+    margin-top: 1.3rem;
+}
+
+.list-header {
+    padding: 1.3rem 1rem;
+    border-bottom: 1px solid hsla(0, 0%, 59%, .1);
+    & .nav-item {
+        font-size: 1.16rem;
+        border-right: 1px solid hsla(0, 0%, 59%, .2);
+        &.active a {
+            color: #007fff;
+        }
+        &:last-child {
+            border-right: 0 none;
+        }
+    }
+}
+
+.entry-view {
+    margin-right: 21.667rem;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
 }
 
 /****/

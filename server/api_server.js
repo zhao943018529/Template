@@ -11,6 +11,7 @@ const upload = require('./Api/upload');
 const user = require('./Api/user');
 const tag = require('./Api/tag');
 const article = require('./Api/article');
+const comment = require('./Api/comment');
 
 const category = require('./Api/category');
 
@@ -35,6 +36,7 @@ app.use('/upload', upload);
 app.use(user);
 app.use('/tag', tag);
 app.use('/article', article);
+app.use('/comment', comment);
 
 app.get('/v2/movie/in_theaters', function (request, response) {
     let data = '';

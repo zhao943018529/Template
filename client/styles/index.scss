@@ -1,7 +1,6 @@
 $fa-font-path:"./icons/fonts";
 $body-bg:#f4f5f5;
-$font-size-base:.8rem;
-
+$font-size-base:1rem;
 @import "./icons/index";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -43,6 +42,9 @@ $font-size-base:.8rem;
 @import "./controls/tagcontrol";
 @import "./controls/loading";
 /**common css**/
+html{
+    font-size: 12px;
+}
 
 a {
     text-decoration: none;
@@ -567,6 +569,11 @@ li {
     background-color: #f8f9fa;
     border: 1px solid #f1f1f1;
     border-radius: 4px;
+    & .action-box {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: .75rem;
+    }
     &.unauthorized {
         padding: 0;
     }
@@ -606,7 +613,6 @@ li {
 .comment-list {
     margin-top: 1.2rem;
     padding: 0;
-    & .comment-item {}
 }
 
 .comment {
@@ -729,6 +735,24 @@ li {
         }
         & button {
             margin-left: .6rem;
+        }
+    }
+    & .empty-comment {
+        & dl {
+            padding: 36px 0;
+            color: #909090;
+            text-align: center;
+            margin: 0 auto;
+            width: 120px;
+            & dt {
+                font-size: 32px;
+            }
+            & dd {
+                margin: 0;
+                text-align: center;
+                height: 18px;
+                margin-top: 5px;
+            }
         }
     }
 }

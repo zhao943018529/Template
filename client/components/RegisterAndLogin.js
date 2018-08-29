@@ -4,7 +4,7 @@ import { fetchData } from '../utilities/fetch';
 import LightTip from '../controls/LightTip';
 import _ from 'lodash';
 import { push } from '../history';
-import {failed_status,success_status} from '../reducer/MessageReducer';
+import { failed_status, success_status } from '../reducer/MessageReducer';
 
 const LOGIN_TYPE = "login";
 
@@ -117,7 +117,8 @@ export default class RegisterAndLogin extends React.Component {
                 message: result.message,
             }, () => {
                 this.props.dispatch(success_status(result));
-                push('/' + '?time=' + Date.now());
+                this.props.success();
+                push(`${this.props.url}?time=${Date.now()}`);
             });
         } else {
             let formData = this.state.formData;

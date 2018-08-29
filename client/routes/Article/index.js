@@ -1,8 +1,10 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import QuillEditor from '../../controls/QuillEditor';
 import Loading from '../../controls/Loading';
+import CommentForm from '../../components/CommentForm';
+import CommentList from '../../components/CommentList';
 import { fetchData } from '../../utilities/fetch';
 
 class ArticleView extends React.Component {
@@ -58,28 +60,10 @@ class ArticleView extends React.Component {
         );
     }
 
-
-
-    createCommentBox() {
-        let user = this.props.user.user;
-        let isLogin = !!user;
-        let content
-
-
-        return (
-            <div className="comment-box">
-                <div className="comment-title">Comment</div>
-                <div className="comment-form unauthorized">
-                    <div className="unauthorized-panel">
-                        <button type="button" className="btn btn-outline-primary btn-sm">Login</button><div className="placeholder">Show your point of view</div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     createArticleArea() {
         let article = this.state.article;
+        let user = this.props.user.user;
+        let uid = user && user.id;
 
         return (
             <article className="article">
@@ -88,12 +72,17 @@ class ArticleView extends React.Component {
                 <div className="article-content">
                     <QuillEditor readOnly={true} value={article.content} />
                 </div>
+                <div className="comment-box">
+                    <CommentForm url='/api/comment/add' uid={uid} aid={this.state.article.id} dispatch={this.props.dispatch} />
+                    <CommentList aid={article.id} uid={uid} dispatch={this.props.dispatch} />
+                </div>
             </article>
         );
     }
 
     render() {
-        let content = this.state.status === 2 ? this.createArticleArea() : <Loading />;
+        let status = this.state.status;
+        let content = status === 2 ? this.createArticleArea() : <Loading />;
 
         return (
             <div className="column-view">
@@ -108,8 +97,8 @@ class ArticleView extends React.Component {
     }
 }
 
-const mapStateToProps = state=>({
-    user:state.user,
+const mapStateToProps = state => ({
+    user: state.user,
 });
 
 export default connect(mapStateToProps)(ArticleView);

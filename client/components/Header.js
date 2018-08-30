@@ -16,6 +16,7 @@ class Header extends React.Component {
         this.state = {
             status: 0,
             categories: [],
+            path:'',
             message: '',
         };
     }
@@ -30,6 +31,9 @@ class Header extends React.Component {
 
     handleClick(path, event) {
         this.props.history.push(path);
+        this.setState({
+            path: path,
+        });
         event.preventDefault();
     }
 
@@ -42,8 +46,9 @@ class Header extends React.Component {
             content = (<div>{tagData.message}</div>);
         } else {
             content =[{id:'home',name:'Home'}].concat(tagData.tags).map(tag => {
-                    let path = `/timeline/${tag.name.toLocaleLowerCase()}`;
-                    return this.createLink(tag,path);
+                    let name =tag.name.toLocaleLowerCase();
+                    let path = `/timeline/${name}`;
+                    return this.createLink(tag,path,path===this.state.path);
                 });
         }
 
@@ -56,11 +61,11 @@ class Header extends React.Component {
         );
     }
 
-    createLink(tag,path) {
-        
+    createLink(tag, path, isActive) {
+
         return (
             <li key={tag.id} className="nav-item">
-                <a className="nav-link" onClick={this.handleClick.bind(this, path)} href="#">{tag.name}</a>
+                <a className={isActive ? "nav-link active" : "nav-link"} onClick={this.handleClick.bind(this, path)} href="#">{tag.name}</a>
             </li>
         );
     }
@@ -70,7 +75,7 @@ class Header extends React.Component {
         let content;
         if (user.user) {
             content = (
-                <div className="d-inline">
+                <div className="d-inline-block">
                     <button type="button" onClick={() => this.props.history.push(`/u/${user.user.username}__${user.user.id}`)} className="btn btn-link">
                         <i className="fa fa-user-circle" aria-hidden="true"></i>
                     </button>
@@ -78,7 +83,7 @@ class Header extends React.Component {
             );
         } else {
             content = (
-                <div className="d-inline">
+                <div className="d-inline-block">
                     <button type="button" onClick={() => this.props.dispatch(login_open())} className="btn btn-link noText-decoration verticalAlign-middle">Sign in</button>
                     <button type="button" onClick={() => this.props.dispatch(register_open())} className="btn btn-outline-primary verticalAlign-middle">Get started</button>
                 </div>

@@ -38,9 +38,10 @@ CommentSchema.virtual("id").get(function () {
 CommentSchema.set("toJSON", { virtuals: true });
 
 CommentSchema.post('save', function (comment) {
+    console.log(comment);
     if (comment.aid) {
         Article.findByIdAndUpdate(comment.aid, {
-            $push: { tags: comment._id }
+            $push: { comments: comment._id }
         });
     }
 });

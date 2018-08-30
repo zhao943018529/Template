@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Tag = require('../../Models/Tag');
+const mongoose = require('mongoose');
+const Tag = mongoose.model('Tag');
 
 router.get('/getTags', function (req, res, next) {
     Tag.find({}).exec(function (err, tags) {
@@ -10,7 +11,7 @@ router.get('/getTags', function (req, res, next) {
             res.json({
                 status: 200,
                 data: tags,
-                message:'Obtain tags successfully',
+                message: 'Obtain tags successfully',
             });
         }
     });
@@ -38,19 +39,19 @@ router.post('/addTag', function (req, res, next) {
 
 router.get('/delTag', function (req, res, next) {
     let id = req.query.id;
-    if(id){
+    if (id) {
         Tag.findByIdAndDelete(id).exec(function (err, tags) {
             if (err) {
                 next(err);
             } else {
                 res.json({
                     status: 200,
-                    message:'delete tag successfully',
+                    message: 'delete tag successfully',
                 });
             }
         });
-    }else{
-        let err= new Error('delete tag need pass id');
+    } else {
+        let err = new Error('delete tag need pass id');
         next(err);
     }
 });

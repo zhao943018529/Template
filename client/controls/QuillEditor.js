@@ -11,6 +11,7 @@ import Quill from "quill";
 const Delta = Quill.import('delta');
 
 import 'katex/dist/katex.min.css';
+import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
@@ -43,13 +44,14 @@ function isEqualValue(v1, v2) {
     return _.isEqual(v1, v2);
   }
 }
+const defaultTheme = 'snow';
 
 export default class QuillEditor extends React.Component {
   constructor(props) {
     super(props);
     this.editorRef = React.createRef();
     this.quillEditor = null;
-    this.state = { status: 0, generate: 0, theme: props.theme ? props.theme : "snow", value: props.value, message: "" };
+    this.state = { status: 0, generate: 0, theme: props.theme ? props.theme : defaultTheme, value: props.value, message: "" };
     this.uploadSuccess = this._uploadSuccess.bind(this);
     this.uploadFailed = this._uploadFailed.bind(this);
     this.saveToServer = this._saveToServer.bind(this);
@@ -76,10 +78,10 @@ export default class QuillEditor extends React.Component {
       });
       if (this.props.readOnly) {
         this.quillEditor.disable();
-      }else{
+      } else {
         this.quillEditor
-        .getModule("toolbar")
-        .addHandler("image", this.imageHandler(this.saveToServer));
+          .getModule("toolbar")
+          .addHandler("image", this.imageHandler(this.saveToServer));
       }
       if (this.state.value) {
         this.quillEditor.setContents(this.state.value);
@@ -89,7 +91,7 @@ export default class QuillEditor extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.theme !== state.theme) {
+    if (props.theme && props.theme !== state.theme) {
       return {
         theme: props.theme,
         generate: state.generate + 1,

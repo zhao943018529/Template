@@ -6,14 +6,16 @@ const https = require("https");
 const app = express();
 
 const db = require('../db');
+const User = require('../Models/User');
+const Article = require('../Models/Article');
+const Comment = require('../models/Comment');
+const Tag = require('../Models/Tag');
 const userMiddleware = require('./middlewares/UserMiddleware');
 const upload = require('./Api/upload');
 const user = require('./Api/user');
 const tag = require('./Api/tag');
 const article = require('./Api/article');
 const comment = require('./Api/comment');
-
-const category = require('./Api/category');
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -32,7 +34,6 @@ app.use(session({
 app.use(userMiddleware);
 
 app.use('/upload', upload);
-// app.use('/category',category);
 app.use(user);
 app.use('/tag', tag);
 app.use('/article', article);

@@ -1,29 +1,27 @@
-import  {createStore,compose,applyMiddleware} from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { makeRootReducer } from '../reducer/createReducer';
 
-import {makeRootReducer} from '../reducer/createReducer';
+const RESETNAME = '@RESET';
 
-const RESETNAME='@RESET';
-
-const resetReducerCreator = (reducer,resetState)=>(state,action)=>{
-    if(action.type===RESETNAME){
+const resetReducerCreator = (reducer, resetState) => (state, action) => {
+    if (action.type === RESETNAME) {
         return resetState;
-    }else{
-        return reducer(state,action);
+    } else {
+        return reducer(state, action);
     }
 }
 
-const restEnhancer = createStore=>(...args)=>{  
+const restEnhancer = createStore => (...args) => {
     const store = createStore(...args);
 
-    const reset = (preState,reducer)=>{
-        const newReducer = resetReducerCreator(preState,reducer);
+    const reset = (preState, reducer) => {
+        const newReducer = resetReducerCreator(preState, reducer);
         store.replaceReducer(newReducer);
         store.dispatch({
-            type:RESETNAME,
+            type: RESETNAME,
         });
     }
-
 
     return {
         ...store,
@@ -31,7 +29,7 @@ const restEnhancer = createStore=>(...args)=>{
     };
 }
 
-export default (reducer)=>{
-    const finalCreateStore = compose(restEnhancer,applyMiddleware(thunk))(createStore);
+export default (reducer) => {
+    const finalCreateStore = compose(restEnhancer, applyMiddleware(thunk))(createStore);
     return finalCreateStore(reducer);
 }

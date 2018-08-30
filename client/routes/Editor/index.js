@@ -16,15 +16,16 @@ function fromJSGreedy(js) {
             Seq(js).map(fromJSGreedy).toMap();
 }
 
-const themes = [{
-    id: 0,
-    value: 'snow',
-    displayName: 'Snow',
-}, {
-    id: 1,
-    value: 'bubble',
-    displayName: 'Bubble',
-}];
+const themes = [
+    {
+        id: 1,
+        value: 'snow',
+        displayName: 'Snow',
+    }, {
+        id: 2,
+        value: 'bubble',
+        displayName: 'Bubble',
+    }];
 
 class Editor extends React.Component {
     constructor(props) {
@@ -95,7 +96,7 @@ class Editor extends React.Component {
     }
 
     getPopupContainer(node) {
-        return node.parentNode.parentNode;
+        return node.parentNode.parentNode.parentNode;
     }
 
     handleSubmit(event) {
@@ -116,7 +117,7 @@ class Editor extends React.Component {
 
     postSuccess(res) {
         if (res.status === 200) {
-            if (this.state.status !== 2 && this.props.match.params.type==='edit') {
+            if (this.state.status !== 2 && this.props.match.params.type === 'edit') {
                 let article = res.data;
                 let fd = this.state.formData.withMutations(map => {
                     map.set('id', article.id).set('title', article.title).set('tags', map.get('tags')

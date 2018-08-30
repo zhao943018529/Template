@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const ObjectId = require('mongoose').Schema.Types.ObjectId;
-const Article = require('../../Models/Article');
+const mongoose = require('mongoose');
+const Article = mongoose.model('Article');
 const _ = require('lodash');
 
 
@@ -60,10 +60,29 @@ router.get('/get/:uid', function (req, res, next) {
             res.json({
                 status: 200,
                 data: articles,
-                message: 'get article successfully',
+                message: 'get articles successfully',
             });
         }
     });
+});
+
+router.get('/getByTag', function (req, res, next) {
+    let tid = req.query.tid;
+    let ids=[];
+    if(tid){
+        ids.push(tid);
+    }
+    Article.getArticlesByTags(ids, function (err, articles) {
+        if (err) {
+            next(err);
+        } else {
+            res.json({
+                status: 200,
+                data: articles,
+                message: 'get articles successfully',
+            });
+        }
+    })
 });
 
 router.get('/getArticle/:id', function (req, res, next) {
@@ -83,7 +102,6 @@ router.get('/getArticle/:id', function (req, res, next) {
     } else {
         res.status(400).send('please pass parameter id');
     }
-
 });
 
 module.exports = router;

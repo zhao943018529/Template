@@ -1,4 +1,5 @@
-const User = require('../../models/User');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
 module.exports = function (req, res, next) {
     if (req.session.uid) {

@@ -40,7 +40,7 @@ export default class CommentForm extends React.Component {
             status: 2,
             body: '',
             message: res.message,
-        });
+        }, () => this.props.success());
     }
 
     closeDialog() {

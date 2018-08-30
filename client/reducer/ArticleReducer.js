@@ -14,7 +14,7 @@ const FETCH_ARTICLES_FAILED = 'fetch_articles_failed';
 const FETCH_ARTICLES_START = 'fetch_articles_start';
 
 const fetch_articles_start = () => ({ type: FETCH_ARTICLES_START });
-const fetch_articles_success = result => ({ type: FETCH_ARTICLES_SUCCESS, payload: result });
+const fetch_articles_success = result => ({ type: FETCH_ARTICLES_SUCCESS, payload: result.data, message: result.message });
 const fetch_articles_failed = err => ({ type: FETCH_ARTICLES_FAILED, error: err });
 
 export {
@@ -28,14 +28,15 @@ export default function reducer(state = initialState, action) {
         case FETCH_ARTICLES_START:
             return {
                 ...state,
+                articles: [],
                 statue: 1,
             };
         case FETCH_ARTICLES_SUCCESS:
             return {
                 ...state,
                 status: 2,
-                articles: action.payload.data,
-                message: action.payload.message
+                articles: action.payload,
+                message: action.message
             };
         case FETCH_ARTICLES_FAILED:
             return {

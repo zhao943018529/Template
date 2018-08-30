@@ -13,6 +13,10 @@ const ArticleSchema = new Schema({
     content: {
         type: String,
     },
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+    }],
     author: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -48,11 +52,26 @@ ArticleSchema.statics.findArticleDetailById = function (id, cb) {
     return this.findById(id).populate({
         path: 'author',
         select: '_id nickname username',
-    }).populate({
+    }).populate('comments').populate({
         path: 'tags',
         select: '_id name',
     }).exec(cb);
 }
 
+ArticleSchema.statics.getArticlesByTags = function (tids, cb) {
+    let query;
+    if (!tids || !tids.length) {
+        query = this.find({});
+    } else {
+        query = this.find({ tags: { $in: tids } });
+    }
+    return query.select('_id title author tags').populate({
+        path: 'author',
+        select: '_id nickname',
+    }).populate({
+        path: 'tags',
+        select: '_id name',
+    }).exec(cb);
+}
 //.select('_id title author tags')
 module.exports = mongoose.model('Article', ArticleSchema);

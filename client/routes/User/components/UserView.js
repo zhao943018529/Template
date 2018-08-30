@@ -18,7 +18,7 @@ export default class UserView extends React.Component {
             <div className="user-info-block">
                 <div className="avatar"></div>
                 <div className="user-info info-box">
-                    <h2>{this.props.user.nickname}</h2>
+                    <h2>{this.props.user.user.nickname}</h2>
                 </div>
                 <div className="action-box info-box">
                     <button type="button" className="btn btn-outline-primary">Edit profile</button>

@@ -41,7 +41,10 @@ class Header extends React.Component {
         } else if (tagData.status === 3) {
             content = (<div>{tagData.message}</div>);
         } else {
-            content = tagData.tags.map(tag => this.createLink(tag));
+            content =[{id:'home',name:'Home'}].concat(tagData.tags).map(tag => {
+                    let path = `/timeline/${tag.name.toLocaleLowerCase()}`;
+                    return this.createLink(tag,path);
+                });
         }
 
         return (
@@ -53,9 +56,8 @@ class Header extends React.Component {
         );
     }
 
-    createLink(tag) {
-        let path = `/channel/${tag.name.toLocaleLowerCase()}`;
-
+    createLink(tag,path) {
+        
         return (
             <li key={tag.id} className="nav-item">
                 <a className="nav-link" onClick={this.handleClick.bind(this, path)} href="#">{tag.name}</a>

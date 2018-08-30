@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Comment = require('../../models/Comment');
+const mongoose = require('mongoose');
+const Article = mongoose.model('Article');
+const Comment = mongoose.model('Comment');
 
 router.post('/add', function (req, res, next) {
     let comment = new Comment(req.body);

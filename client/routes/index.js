@@ -27,22 +27,15 @@ const createRoutes = store => ([
             }]);
             store.reset(newReducer, resetState);
 
-            return <Bundle load={() => import('./Home')} {...props} />;
+            return <Bundle load={() => import('./TimeLine')} {...props} />;
         },
     },
     {
-        path: '/channel/:category',
-        key: 'channel',
+        path: '/timeline/:type?',
+        key: 'timeline',
         render: props => {
-            let resetState = store.getState();
-            let userRelated = require('../reducer/UserReducer');
-            let newReducer = injectReducers(store, [{
-                key: 'user',
-                reducer: userRelated.default
-            }]);
-            store.reset(newReducer, resetState);
 
-            return <Bundle load={() => import('./ListView')} {...props} />;
+            return <Bundle load={() => import('./TimeLine')} {...props} />;
         },
     },
     {
@@ -73,6 +66,16 @@ const createRoutes = store => ([
         path: '/post/:id',
         key: 'post',
         render: props => {
+            let state = store.getState();
+            if (!state.comment) {
+                let commentRelated = require('../reducer/CommentReducer');
+                let resetState = {
+                    ...state,
+                    comment: commentRelated.comment,
+                };
+                let newReducer = injectReducers(store, [{ key: 'comment', reducer: commentRelated.default }]);
+                store.reset(newReducer, resetState);
+            }
             return <Bundle load={() => import('./Article')} {...props} store={store} />;
         },
     },

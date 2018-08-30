@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Article = mongoose.model('Article');
 const Schema = mongoose.Schema;
 const CommentSchema = new Schema({
     aid: {
@@ -35,6 +36,14 @@ CommentSchema.virtual("id").get(function () {
 });
 
 CommentSchema.set("toJSON", { virtuals: true });
+
+CommentSchema.post('save', function (comment) {
+    if (comment.aid) {
+        Article.findByIdAndUpdate(comment.aid, {
+            $push: { tags: comment._id }
+        });
+    }
+});
 
 CommentSchema.statics.findTopComments = function (aid, cb) {
     return this.find({ aid: aid }).populate({

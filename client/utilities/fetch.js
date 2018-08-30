@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import _ from 'lodash';
 import { reset_status, success_status, failed_status } from '../reducer/MessageReducer';
 
 function checkStatus(response) {
@@ -35,20 +36,24 @@ export function fetchData() {
         .then(data => callbacks[i++](data))
         .catch(err => callbacks[++i](err));
 }
-
+let strs = ['del', 'delete', 'add', 'save', 'update'];
 export function createRequest() {
     if (arguments.length < 2) {
         throw new Error('parameters size expect gt 2');
     }
     let url = arguments[0], actions;
     let option = arguments[2] && (actions = arguments[2]) ? arguments[1] : (actions = arguments[1]) && {};
-
+    let matches = url.match(/(\/\w+)*\/(\w+)/);
+    let lowerUrl = matches[2].toLowerCase();
+    let needTip = strs.some(str => lowerUrl.startsWith(str));
     return dispatch => {
         actions.start && dispatch(actions.start());
         return fetch(url, option).then(checkStatus).then(parseJSON)
             .then(data => {
                 if (data.status == 200) {
-                    dispatch(success_status(data));
+                    if (needTip) {
+                        dispatch(success_status(data));
+                    }
                     dispatch(actions.success(data));
                 } else if (data.status == 300) {
                     //request successully but validate failed

@@ -88,7 +88,7 @@ class AppContainer extends React.Component {
         } else if (login.status === 2) {
             loginView = (
                 <Dialog Style={{ width: 600 }} Title='Get start' Close={this.closeLoginDialog}>
-                    <RegisterAndLogin type="register" dispatch={this.props.dispatch} />
+                    <RegisterAndLogin type="register" success={this.closeLoginDialog} dispatch={this.props.dispatch} />
                 </Dialog>
             );
         }

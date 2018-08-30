@@ -7,6 +7,11 @@ const CommentSchema = new Schema({
     pid: {
         type: Schema.Types.ObjectId,
     },
+    author: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User',
+    },
     body: {
         type: String,
         required: true,
@@ -24,5 +29,28 @@ const CommentSchema = new Schema({
         default: Date.now,
     },
 });
+
+CommentSchema.virtual("id").get(function () {
+    return this._id;
+});
+
+CommentSchema.set("toJSON", { virtuals: true });
+
+CommentSchema.statics.findTopComments = function (aid, cb) {
+    return this.find({ aid: aid }).populate({
+        path: 'author',
+        select: '_id nickname username',
+    }).sort('createAt').exec(cb);
+}
+
+CommentSchema.statics.findCommentsByPid = function (pid, cb) {
+    return this.find({ pid: pid }).populate({
+        path: 'author',
+        select: '_id nickname username',
+    }).populate({
+        path: 'responseTo',
+        select: '_id nickname username',
+    }).sort('createAt').exec(cb);
+}
 
 module.exports = mongoose.model('Comment', CommentSchema);

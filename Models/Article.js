@@ -18,7 +18,6 @@ const ArticleSchema = new Schema({
         required: true,
         ref: 'User',
     },
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     updatedAt: {
         type: Date,
         default: Date.now,
@@ -42,7 +41,18 @@ ArticleSchema.statics.getArticlesByUid = function (uid, cb) {
     }).populate({
         path: 'tags',
         select: '_id name',
+    }).sort('updatedAt').exec(cb);
+}
+
+ArticleSchema.statics.findArticleDetailById = function (id, cb) {
+    return this.findById(id).populate({
+        path: 'author',
+        select: '_id nickname username',
+    }).populate({
+        path: 'tags',
+        select: '_id name',
     }).exec(cb);
 }
+
 //.select('_id title author tags')
 module.exports = mongoose.model('Article', ArticleSchema);

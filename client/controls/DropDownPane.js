@@ -7,6 +7,10 @@ export default class DropDownPane extends React.Component {
         this.delayTimer=null;
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.visible || nextProps.search !== this.props.search;
+    }
+
     _selectOption(event) {
         let target = event.currentTarget;
         let index = parseInt(target.dataset.index);
@@ -45,7 +49,7 @@ export default class DropDownPane extends React.Component {
 
         return (
             <div style={{ overflow: "auto" }}>
-                <ul className="select-dropdown-menu" tabIndex={0}>
+                <ul className="select-dropdown-menu" tabIndex={0} onFocus={this.props.onPopupFocus}>
                     {content}
                 </ul>
             </div>

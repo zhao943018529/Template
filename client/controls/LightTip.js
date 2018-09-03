@@ -1,7 +1,7 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import Portal from './Portal';
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 
 //type:Error Success 
 
@@ -21,7 +21,7 @@ export default class LightTip extends React.Component {
         this.delayDestroyTip = this._delayDestroyTip.bind(this);
         this.handlePortalUpdate = this._handlePortalUpdate.bind(this);
         this.rootRef = React.createRef();
-        this.tasks=[];
+        this.tasks = [];
     }
 
     componentDidMount() {
@@ -32,25 +32,31 @@ export default class LightTip extends React.Component {
         this.clearDelayTime();
     }
 
-    clearDelayTime() {
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevState.show && this.tasks.length) {
+            this.setState({
+                show: true,
+                task: this.tasks.shift(),
+            }, () => {
+                this.timeId = setTimeout(this.delayDestroyTip, 1500);
+            });
+        }
+    }
+
+    clearDelayTime = () => {
         if (this.timeId) {
             clearTimeout(this.timeId);
+            this.timeId = null;
         }
     }
 
     _handlePortalUpdate() {
-        let child = findDOMNode(this);
-        let parent = child.offsetParent;
-        parent.style.marginLeft = -parent.offsetWidth / 2 + 'px';
+        let root = findDOMNode(this);
+        root.style.marginLeft = -root.offsetWidth / 2 + 'px';
     }
 
     _delayDestroyTip() {
         this.clearDelayTime();
-        if(this.tasks.length){
-
-        }else{
-            
-        }
         this.setState({
             show: false,
         }, () => {
@@ -61,21 +67,13 @@ export default class LightTip extends React.Component {
         });
     }
 
-    shouldComponentUpdate(nextProps,nextState){
-        if(nextState.show){
-            return true;
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.show && isEqual(nextState.task, this.state.task)) {
+            this.tasks.push(nextProps);
+            return false;
         }
-    }
 
-    getDerivedStateFromProps(nextProps, prevState){
-        if(!prevState.show&&!isEqual(nextProps,prevState.task)){
-            return {
-                show:true,
-                ...nextProps,
-            };
-        }else{
-            return null;
-        }
+        return true;
     }
 
     _getContainer() {
@@ -90,13 +88,14 @@ export default class LightTip extends React.Component {
 
     render() {
         if (this.state.show || this.rootRef.current) {
-            let iconClassName = `lighttip-icon fa fa-${this.props.type === 'success' ? 'check' : 'times'}`;
+            let task = this.state.task;
+            let iconClassName = `lighttip-icon fa fa-${task.type === 'success' ? 'check' : 'times'}`;
 
             return (
                 <Portal ref={this.rootRef} getContainer={this.getContainer} didUpdate={this.handlePortalUpdate}>
-                    <div className={`lighttip ${this.props.type === 'success' ? 'lighttip-success' : 'lighttip-error'}`}>
+                    <div className={`lighttip ${task.type === 'success' ? 'lighttip-success' : 'lighttip-error'}`}>
                         <i className={iconClassName} aria-hidden="true"></i>
-                        <span className="lighttip-content">{this.props.message}</span>
+                        <span className="lighttip-content">{task.message}</span>
                     </div>
                 </Portal>
             );
